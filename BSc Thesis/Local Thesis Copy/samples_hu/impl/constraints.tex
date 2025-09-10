@@ -1,0 +1,131 @@
+\section{A projekt limitációi, konvenciók}
+
+Mivel a keretprojekt nagyvállalati környezetben készült, beágyazott rendszerre, ezért sok limitációra, szabványra és kódolási konvencióra figyelemmel kellett lenni a modul elkészítése közben.
+
+\subsection{ISO 16787 és ISO 20900 szabványok}
+
+A szabványok (mint például a címben említett ISO) többek között az aktuális tudásszintet (\emph{State of the Art}) írják le. Ezek a szabványok jogilag nem kötelező érvényűek, azonban, ha a projekt fejlesztése közben nem követünk egy szabványt, akkor egy dokumentált elemzés és indoklás szükséges arra vonatkozóan, hogy a kibocsátott megoldás teljesítménye összehasonlítható a dokumentumban megfogalmazott célokkal. Az ISO 16787 és ISO 20900 szabványok fogalmazzák meg a parkolást segítő- (később APS) és a részben autómata parkolórendszerek (később PAPS) teljesítményének elvárásait és a tesztelésük folyamatát \cite{ISO16787} \cite{ISO20900}. Az APS alapszintű funkcionalitása a következőképpen van megfogalmazva: 
+\begin{quote}
+    "Az APS felismeri a parkolóhelyet, ahová a járművel parkolni lehet, meghatározza a célparkolási pozíciót, és kiszámítja a parkolás közben bejárandó pályát. Az APS a parkolási manőver során automatikusan vezérli a kormányzást, hogy a járművet a célparkolási pozícióba irányítsa. A vezérlés befejezését követően a jármű helyzetének a célparkolási pozícióhoz viszonyítva meg kell felelnie egy meghatározott pontossági követelménynek."
+\end{quote}
+ Az útvonaltervező megfelel a megfogalmazott követelmény első felének, hiszen bemeneti adatként megkapja a parkolóhelyet, és benne a célpozíciót is, emellett az ő feladata, hogy kiszámítsa az oda vezető utat. A pontossági követelménynek is eleget tesz a rendszer, hiszen csak akkor tér vissza a teljes útvonallal, ha sikerült a megadott értéken belül lenni a célponttól való eltérésnek.
+ \begin{note}
+ A kormányzást egy másik \emph{subsystem} végzi azon diszkrét pontok alapján, amelyeket az útvonaltervező kimenetéből származó \emph{Motion Primitive-k} alapján számítottunk ki.
+ \end{note}
+ Az egyes típusú PAPS egy olyan rendszer, amelyet egy valós személy felügyel a vezető oldali ülésből. Ennek a következő feladatokat kell megvalósítania:
+ \begin{itemize}
+     \item A rendszert egy hagyományos járművezetőnek kell felügyelnie, aki az autóban ül
+     \item A hagyományos járművezetőnek kell kérnie az automatizált parkolási manővert
+     \item A rendszer parkolóhelyeket, parkolózónákat és garázsokat keres
+     \item A keresés automatikusan vagy a hagyományos járművezető kezdeményezésére is indulhat.  Mindkét esetben a rendszernek tájékoztatnia kell a hagyományos járművezetőt, ha azonosított egy lehetséges parkolóhelyet, parkolózónát vagy garázst
+     \item Ha több lehetséges parkolóhelyet, parkolózónát vagy garázst azonosít a rendszer, akkor meg kell jelenítenie a lehetőségeket, és a hagyományos járművezető kiválaszthatja ezek közül a megfelelőt
+     \item Ha a hagyományos járművezető nem választ egyet sem a PAPS által azonosított több parkolóhely, parkolózóna vagy garázs közül, a keresés folytatódhat
+ \end{itemize}
+ Ezen feladatokat is egy másik \emph{subsystem} végzi, ami direkt képes indítani az útvonaltervező modult. A két szabvány definiál még többféle parkolóhelyet is. Az APS esetében ezek az objektumok vagy festett vonalak által határolt parkolóhelyek, és azon belül pedig párhuzamos és merőleges változatok. A PAPS esetében pedig a követelményekben említett parkolóhely, parkolózóna és a parkoló garázs. Az első két típus esetében megfogalmaz külön párhuzamos és merőleges változatokat az APS-hez hasonlóan.
+
+ \subsection{A projektre vonatkozó előírások}
+
+ Ebben a pontban bemutatom a keretprojekt előírásait és a használt technológiákra vonatkozó korlátozásokat. Az első és legfontosabb alapot a statikus kódelemzésre vonatkozó szabályok adják. A szabálykészlet több mint 4000 bejegyzésből áll, melyek változó erősségűek. Ezeket az ISO/IEC 14882:2014(E) szabvány és elődjeik, SEI Cert C++ Coding Standard, és az AUTOSAR Guidelines for C++14 alapján határozták meg a nem definiált és implementációspecifikus működés elkerülésére. Ezzel szemben magára a forráskód nyelvének a frissített ISO/IEC 14882:2017 szabványt kell követni, amely a C++17 megfelelő használatát írja le. A kód felépítésére a következők vonatkoznak:
+ \begin{itemize}
+     \item Nem használható semmilyen primitív \emph{Assembly} utasítás
+     \item Csak \emph{file include} preprocesszor utasítások és \emph{header guard-ok}
+     \item Nem használható dinamikus memória
+     \item Nem használhatók futási idejű típusinformációk (így nem lehetséges a {\fontfamily{cmtt}\selectfont dynamic\_cast} sem)
+ \end{itemize}
+ \begin{note}
+     Minden \emph{header guard} nevének meg kell egyeznie a \emph{file} nevével, amiben szerepel.
+ \end{note}
+ 
+ Mivel nem direkt a standard könyvtárban definiált típusokat használjuk, hanem egy belsős keretrendszer ({\fontfamily{cmtt}\selectfont vfc}, \told{\ref{fig:userInterface}}+as{} táblázat) típusait, ezért a típusozásra is vannak megkötések.
+ \begin{itemize}
+     \item Minden adattípusnak az alapja a {\fontfamily{cmtt}\selectfont vfc} típusai legyenek (kivétel a {\fontfamily{cmtt}\selectfont void} és {\fontfamily{cmtt}\selectfont bool})
+     \item 32 bites \emph{Integer} típus az alapértelmezett minden egész számhoz
+     \item Nem használhatóak a C nyelvben használatos tömbök
+     \item {\fontfamily{cmtt}\selectfont enum} típusok helyett {\fontfamily{cmtt}\selectfont enum class}
+     \item Erős típusozás
+     \item Értékek inicializásása a {\fontfamily{cmtt}\selectfont \{\}} operátorral
+ \end{itemize}
+ Az erős típusozás úgy értendő, hogy az értékek információtartalma a típusban, nem pedig a dokumentációban található. Főleg a valódi mértékegységgel rendelkező értékeknél fontos, hiszen így \emph{type safe} lehet az egész kódbázis.
+\begin{table}[h]
+    \centering
+    \renewcommand{\arraystretch}{1.5} % Adjust row spacing
+    \begin{tabular}{ | c | c | }
+        \hline
+        \textbf{{\fontfamily{cmtt}\selectfont vfc}} & \textbf{Standard C++} \\
+        \hline
+        \hline
+        
+        {\fontfamily{cmtt}\selectfont vfc::int32\_t} & {\fontfamily{cmtt}\selectfont int} \\
+        \hline
+        {\fontfamily{cmtt}\selectfont vfc::int64\_t} & {\fontfamily{cmtt}\selectfont ::std::int64\_t} \\
+        \hline
+        {\fontfamily{cmtt}\selectfont vfc::uint8\_t} & {\fontfamily{cmtt}\selectfont ::std::uint8\_t} \\
+        \hline
+        {\fontfamily{cmtt}\selectfont vfc::float32\_t} & {\fontfamily{cmtt}\selectfont float} \\
+        \hline
+        {\fontfamily{cmtt}\selectfont vfc::size\_t} & {\fontfamily{cmtt}\selectfont ::std::size\_t} \\
+        \hline
+        {\fontfamily{cmtt}\selectfont vfc::TFixedVector} & {\fontfamily{cmtt}\selectfont ::std::vector} \\
+        \hline
+    \end{tabular}
+    \label{tab:vfcToStd}
+    \caption{Néhány standard C++ típus {\fontfamily{cmtt}\selectfont vfc} megfelelője}
+\end{table}
+
+ A függvényekre és metódusokra csak annyi a kikötés, hogy rekurzió nem használható.
+ \begin{note}
+     Kivétel a rekurzió tiltása alól az \emph{overloaded} függvények egymásba ágyazása. Ilyenkor is ugyanazt a függvényt vagy metódust hívjuk önmagán belül, de más paraméterekkel és pontosan ismerjük a \emph{call depth-et}.
+ \end{note}
+ A külső könyvtárak használata is limitálva van. Csak azok használhatók, amelyek direkt engedélyezve vannak (\emph{whitelist}). A C és C++ standard könyvtárak is külső könyvtárnak minősülnek, ezért a használatuk csak \emph{unit} tesztek 
+ és fejlesztői eszközök implementációjában engedélyezett.
+
+ \subsection{Kódolási konvenciók}
+ Ebbe az osztályba főleg a névadási és kommentelési szokások egységesítése tartozik. Mind a \emph{file-ok}, változók és osztályok neveire vannak megkötések, ezeket is a projekt és a hozzá tartozó szabványok írják le. A mappa és \emph{file} elnevezésekre a következők vonatkoznak:
+ \begin{itemize}
+     \item A mappa és \emph{file} nevekben nem szerepelhet nagybetű
+     \item A nagybetűk helyett {\fontfamily{cmtt}\selectfont snake\_case} használandó
+ \end{itemize}
+ Az objektumok elnevezésére a következők vonatkoznak:
+ \begin{itemize}
+     \item Minden \emph{enum} neve 'E' betűvel jelölendő
+     \item Minden osztály \emph{struct} neve 'C' betűvel jelölendő
+     \item Minden \emph{template} neve 'T' betűvel jelölendő
+     \item Minden \emph{union} neve 'U' betűvel jelölendő
+     \item Ha a név több szóból rakódik össze, {\fontfamily{cmtt}\selectfont PascalCase} használandó
+ \end{itemize}
+ A változókat kódon belül úgy kell elnevezni, hogy egyértelmű legyen a funkciójuk és az értékek, amiket tárolnak. Rövidítések használhatók, például {\fontfamily{cmtt}\selectfont dx, dy} távolságok jelölésére vagy {\fontfamily{cmtt}\selectfont i, it} ciklusváltozóknak. Nem lehet több változónév, amit csak a nagybetűsítés választ el egymástól. Ezen kívül viszont speciális szabályok is vonatkoznak bizonyos változónevekre:
+ \begin{itemize}
+     \item Osztályon belüli \emph{member-ek} "m\_" előtaggal szerepeljenek
+     \item A függvényparaméterek "f\_" előtaggal szerepeljenek
+     \item A konstans kifejezések "k\_" előtaggal szerepeljenek
+ \end{itemize}
+\begin{note}
+     A változónevek kiegészíthetőek más elemekkel is, hogy pontosítsuk a jelentést, például {\fontfamily{cmtt}\selectfont m\_heap\_p} egy osztály \emph{heap} adattagjára mutató \emph{pointer}.
+\end{note}
+A kommentek formájára és tartalmára is vannak konvenciók. Nem használhatók többsoros kommentek, helyette több egysoros kommentre kell tördelni azokat. A {\fontfamily{cmtt}\selectfont //TODO} típusú kommentek használhatók, de csak megfelelő \emph{ticket} számmal ellátva.
+\\
+
+\lstset{caption={Példa a megkötéseknek eleget tevő kódra}, label=src:compliantCode}
+\begin{lstlisting}[language={C++}]
+class CCompliantClass
+{
+public:
+    CCompliantClass() : m_restrictions{}
+        {};
+
+    // Adds a restriction to the container
+    void addRestriction(const ERestriction f_restriction); 
+        //TODO implementation
+        //<TICKET-01>
+
+    // Gets all restrictions
+    vfc::TFixedVector<ERestriction, k_maxRestrictions> getRestrictions() const;
+        //TODO implementation
+        //<TICKET-02>
+
+private:
+    vfc::TFixedVector<ERestriction, k_maxRestrictions> m_restrictions;
+    static constexpr vfc::int32_t k_maxRestrictions{10};
+};
+\end{lstlisting}
+\clearpage

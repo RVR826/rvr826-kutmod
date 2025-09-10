@@ -1,0 +1,56 @@
+\chapter{Bevezetés}
+
+\section{Szakdolgozat témája}
+\subsection{Útvonaltervezés több részletben}
+
+Míg az önvezető autók főként a mesterséges intelligenciára és gépi tanulásra támaszkodnak a közlekedés során, egyes helyzetek – mint például a parkolás – olyan specifikus feladatokat igényelnek, ahol a precizitás elsődleges fontosságú. A parkolás kihívása abban rejlik, hogy a járműnek szűk helyeken kell pontos manővereket végrehajtania. Ebben az esetben a hagyományos útvonalkereső algoritmusok, mint például az A* algoritmus, hatékonyabbak lehetnek, mivel ezek az algoritmusok garantálni tudják a jármű optimális és pontos pozícióját a parkolás során. A gépi tanulás alapú rendszerekkel ellentétben a hagyományos algoritmusok szigorúbb, determinisztikus megközelítést alkalmaznak, amely különösen fontos, amikor centiméter pontosságú manőverekről van szó.
+
+A parkolás különösen nehéz feladat lehet az önvezető autók számára, mivel gyakran nagyon szűk, zsúfolt környezetben kell pontos manővereket végrehajtaniuk. Ilyen helyzetekben a járműnek figyelembe kell vennie a környező autók, akadályok és a parkolóhelyek méretének változatos elrendezését, miközben korlátozott számítási kapacitással kell dolgoznia. A jármű fedélzeti rendszereinek gyorsan és hatékonyan kell kiszámolniuk az optimális parkolási manővert, miközben biztosítaniuk kell a biztonságos távolságok betartását. Az önvezető rendszereknek képesnek kell lenniük arra, hogy a meglévő erőforrásaikat hatékonyan használják, minimalizálva a számítási terhelést anélkül, hogy ez a parkolási teljesítmény rovására menne.
+
+A parkolási manőverek esetében az útvonalkeresési feladat hatékonyabbá tehető, ha kisebb részfeladatokra bontjuk. Például először az autó beállhat egy megfelelő kiindulási pozícióba, majd egy második lépésben a jármű precízen végrehajthatja a tolatást vagy a beállást a parkolóhelyre. Ez a megközelítés lehetővé teszi, hogy az egyes parkolási manőverek külön-külön optimalizálva legyenek, csökkentve a számítási komplexitást és gyorsítva a megoldást. Emellett a részekre bontott parkolási folyamat segíthet abban is, hogy a rendszer rugalmasabban alkalmazkodjon a környezeti változásokhoz – például, ha egy új akadály jelenik meg a parkolási zónában, akkor a rendszer csak az adott részfeladatot tervezi újra, nem pedig az egész parkolási folyamatot.
+
+\subsection{A hallgató feladata}
+
+A hallgató feladata egy olyan algoritmus fejlesztése és integrálása, amely adott környezeti információk alapján képes részfeladatokra osztani az útvonalkeresési problémát. Az algoritmustól elvárt, hogy az általa meghatározott részfeladatok megoldása hatékonyabb legyen, mint az egész probléma egyszerre történő megoldása, a lehető legkisebb útvonalminőség romlással. A hallgatónak az elkészült algoritmust egy meglévő útvonaltervező algoritmusba kell integrálnia, és a két algoritmus teljesítményét összehasonlítania. A hallgató feladatának részei:
+\begin{enumerate}
+	\item\label{step:first}Ismerje meg a meglévő útvonaltervező algoritmust
+	\item Ismerje meg a használati eseteket
+	\item Végezzen kutatást a részfeladatokra osztott útvonalkeresési problémákra
+	\item Készítsen koncepciót az útvonaltervező és az algoritmus integrációjára, interfészeire
+	\item Implementálja az algoritmust
+	\item Integrálja az algoritmust az útvonaltervező algoritmusba
+	\item Értékelje ki az algoritmus teljesítményét
+	\item Dokumentálja a fejlesztési folyamatot és az eredményeket
+	\item Integrálja az algoritmust meglévő vizualizációs eszközökbe
+\end{enumerate}
+
+\section{Szójegyzék}
+
+A dolgozatban több helyen szerepelnek idegen szakszavak, melyek csak későbbi fejezetekben vannak részletezve, de előbb is megjelennek.  Ezek jelentését és rövid leírását gyűjtöttem össze ide, hogy minden olvasó számára elsőre érthetőek legyenek.
+\begin{itemize}
+    \item \textbf{\emph{Waypoint Module}} \\
+    A szakdolgozat fő témáját kitevő programkönyvtár, mely segítségével lehetséges a többrészes parkolás. 
+    \item \textbf{Referencia konfiguráció (vagy RC)} \\
+    A \emph{Waypoint Module-ban} használt \emph{waypoint} jelöltek. Ezekből itrációnként kettő generálódik, egy párhuzamos és egy merőleges. Ezek megfelelő összekötésével készül el a végső útvonal. 
+    \item \textbf{\emph{Motion Primitive} (vagy primitív)} \\
+    Az útvonaltervezőben használt, egyszerű mozdulatot leíró objektum. Ezek segítségével ábrázoljuk a tervezett útvonalat. 
+    \item \textbf{\emph{Subsystem}} \\
+    A teljes keretprojekt több kisebb rendszerből épül fel, ezek a \emph{subsystem-ek}. A még kisebb építőegységet könyvtárnak nevezem, ilyen például az útvonaltervező és a \emph{Waypoint Module} is.
+    \item \textbf{\emph{Scene}} \\
+    Egy előre beállított parkolási teszteset, melyet szimulálni lehet. 
+\end{itemize}
+\clearpage
+
+\section{Témaválasztás szerepe}
+
+Napjainkban az autókban már egyre több kényelmi funkció található. Ezek között gyakran feltűnnek a parkolást segítő vagy akár a teljesen önállóan parkolni képes rendszerek. Szakdolgozatom témája is az autóipar ezen részéhez kapcsolódik.
+
+A szakmai gyakorlatomat a Robert Bosch Kft-nél végzem, ahol autók parkolásához használt útvonaltervezési problémákkal foglalkozom. A cég, általam is fejlesztett, útvonaltervezőjében lehetőség van több részletben végezni a tervezést. Ez a funkció még nem volt kihasználva, és semmilyen implementáció nem segítette, hogy egy általános útvonaltervezési problémát több részletre lehessen osztani. Mivel nap mint nap hasonló dolgokkal foglalkozom, dolgozatom témájának az előbb felvetett problémát választottam.
+\\
+
+\begin{figure}[H]
+    \centering
+	\includegraphics[width=300px]{elte_cimer_szines}
+	\caption{Részekre osztott parkolás}
+	\label{fig:DividedParking}
+\end{figure}

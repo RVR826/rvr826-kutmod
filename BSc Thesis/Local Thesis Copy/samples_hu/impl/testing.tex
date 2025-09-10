@@ -1,0 +1,105 @@
+\section{Tesztelés}
+
+Ebben a pontban bemutatom az általam készített programkönyvtár tesztelésének lépéseit. A \emph{unit test-ek} készítéséhez a \emph{Google Test} tesztkeretrendszert használtam, a bonyolultabb integrációs teszteket pedig a projekt saját vizualizációs szoftverében végeztem.
+
+\subsection{Tesztelési terv}
+
+Ahhoz, hogy a magasabb absztrakciós szinten lévő osztályok megfelelően működjenek, a legfontosabb tesztelni az őket segítő metódusokat. Ezt valósítja meg a {\fontfamily{cmtt}\selectfont waypoint\_module\_helpers\_test.cpp} \emph{file}. Minden segédfüggvényhez definiáltam ekvivalenciaosztályokat, melyekben az elvárt működés ugyanaz. Ezek a forgatásokban jelennek meg: $[0, 2\pi]$, $(2\pi, +\infty)$, $(-\infty, 0)$. Ezekből elég csak osztályonként egy tesztesetet vizsgálni, mert a viselkedésük megegyezik. A koordináta-transzformációs függvényekhez a tesztesetek a következők:
+\begin{itemize}
+	\item Ha a kért középpont és a valós középpont megegyezik, akkor az eredeti pontot adjuk vissza eredményként
+    \item Ha a kért középpont és a valós középpont közt csak eltolás van, akkor az eredmény is helyesen van eltolva
+    \item Ha a kért középpont és a valós középpont közt eltolás és forgatás is van, akkor az eredmény is helyesen van transzformálva - forgatás $[0, 2\pi]$
+    \item Ha a kért középpont és a valós középpont közt eltolás és forgatás is van, akkor az eredmény is helyesen van transzformálva - forgatás $(2\pi, +\infty)$
+    \item Ha a kért középpont és a valós középpont közt eltolás és forgatás is van, akkor az eredmény is helyesen van transzformálva - forgatás $(-\infty, 0)$
+\end{itemize}
+Ezeken kívül a \emph{heap} adatszerkezet \emph{unit} tesztelése volt még fontos, hiszen a legjelentősebb tároló, ami nem egyértelműen működik (vagy adott a működése, mint például a {\fontfamily{cmtt}\selectfont vfc::TFixedMap} típus). A \emph{heap} metódusainak tesztesetei a következők:
+\begin{itemize}
+	\item Létrehozáskor üres
+	\item Ha adatot adunk hozzá, az adat a tömbben van
+	\item Ha kiürítjük a tárolót, akkor újra üres
+	\item Ha van elem a \emph{heap-en}, \emph{pop} művelet után az elemek száma csökken
+	\item Ha több elemet adunk hozzá, az elemek növekvő sorrendben vannak
+	\item Ha ugyanazt az elemet többször adjuk hozzá, a másolat is jelen van
+\end{itemize}
+A következő osztály, amelynek a működését vizsgálni kell, a {\fontfamily{cmtt}\selectfont CPathDatabase}. A tesztesetek a következők:
+\begin{itemize}
+	\item Ha egy útvonalat eltárolunk, helyesen kapjuk vissza
+    \item Ha tele van az adatbázis, nem tárol el több adatot, de nem ad hibát
+    \item Ha kiürítjük az adatbázist, a mérete 0
+    \item Ha a teljes útvonalat kérjük, helyesen illeszti a részleteket egymás után
+    \item Ha használ a \emph{planner} többrészes tervezést, a valóban használt \emph{waypoint-okat} adja vissza
+\end{itemize}
+\begin{explain}
+    A második teszteset azért szükséges, mert fix méretű \emph{map-pal} dolgozik az osztály. Ennek a mérete úgy van megválasztva, hogy megfelelő használat mellett nem kerülhet bele több elem, mint a maximális méret.
+\end{explain}
+A {\fontfamily{cmtt}\selectfont CReferenceConfigurationCalculator} működését \emph{unit} tesztelni nehéz, ezért ezt integrációs teszt formájában tesztelem vizualizációs szoftverben. Így könnyebben látható, hogy tényleg jól generálódnak az RC-k, és valóban azok között tervez a rendszer. Egy másik megközelítés a teljes osztály \emph{mock-olása} lenne, hogy minden alkalommal egyszerűen vizsgálható eredményt adjon vissza.
+
+\subsection{Integrációs tesztek, vizualizálás}
+
+Ebben az alfejezetben mutatom be a \emph{Waypoint Module} integrálásának a folyamatát a vizualizációs szoftverbe. Nem szükséges hozzáadni a modult a vizualizációs program \emph{CMake file-jához}, mert az útvonaltervezőn keresztül el lehet érni a szükséges adatokat.
+
+Hogy aktiválni lehessen a többrészes útvonaltervezést, a felhasználói felületen hozzáadtam egy \emph{checkbox-ot} a \emph{"Planner"} beállítási oldalra. Ez a háttérkódban a {\fontfamily{cmtt}\selectfont visualization\_options.hpp} \emph{file-ban} bevezettem egy értéket, ami nyilvántartja, hogy mi a kapcsoló állása. Egy megfelelő getter függvény is tartozik hozzá, ennek segítségével lehet lekérdezni a változó értékét. Ezután ugyanilyen módon hozzáadtam a felhasznált \emph{waypoint-ok} kirajzolásának lehetőségét is. A két paramétert feliratkoztattam a két \emph{checkbox clicked} eseményére.
+\\
+
+\lstset{caption={Paraméterek feliratkoztatása az eseményekre 1.}, label=src:connectParams1}
+\begin{lstlisting}[language={C++}]
+connect(
+    f_ui->checkBox_waypoints,
+    &QCheckBox::clicked,
+    this,
+    [=, &f_sceneFrame]
+    {
+        onVisualisationOptionClicked(f_ui->checkBox_waypoints, &m_showWaypoints);
+        f_sceneFrame.redrawWaypoints();
+    }
+);
+connect(
+    f_ui->checkBox_waypointModule,
+    &QCheckBox::clicked,
+    this,
+    [=] 
+    { 
+        onVisualisationOptionClicked(f_ui->checkBox_waypointModule, &m_enableWaypointModule);
+    }
+);
+\end{lstlisting}
+
+A következő feladat az útvonaltervező modul paramétereinek megfelelő beállítása volt a vizualizációs opciók alapján. Ezt is a megfelelő \emph{checkbox clicked} eseményére való feliratkozással értem el. A program futása közben lehetőség van kiírni üzeneteket a konzol ablakba, hogy nyomon lehessen követni, milyen események történnek működés közben. Ezt a {\fontfamily{cmtt}\selectfont qInfo} függvénnyel lehet megtenni.
+\\
+
+\lstset{caption={Paraméterek feliratkoztatása az eseményekre 2.}, label=src:connectParams2}
+\begin{lstlisting}[language={C++}]
+connect(
+    ui->checkBox_waypointModule,
+    &QCheckBox::clicked,
+    this,
+    [=]
+    {
+        m_inputHandler.setEnableWaypointModuleParam(m_visualisationOptions.isWaypointModuleEnabled());
+        qInfo(
+            m_visualisationOptions.isWaypointModuleEnabled()
+            ? "Waypoint Module enabled"
+            : "Waypoint Module disabled"
+        );
+    }
+);
+\end{lstlisting}
+
+Szükséges volt még a mozgást leíró paraméterek beállítására is lehetőséget biztosítani. Ezt értékenként egy \emph{input} mezővel valósítottam meg a felhasználói felületen, míg a háttérkódban létrehoztam egy {\fontfamily{cmtt}\selectfont WaypointModuleParams struct}-ot. Ezeket az értékeket feliratkoztattam az \emph{input} mezők \emph{textChanged} eseményére, így mindig változnak, ha a felhasználói felületen is változtatnak rajta. Ezeket az értékeket konvertálom tervezés előtt egy, a \emph{Waypoint Module-ban} is használt {\fontfamily{cmtt}\selectfont CWaypointModuleParams} objektumra.
+
+Az útvonaltervező futása után a program lekérdezi a használt \emph{waypoint-okat} és elmenti azokat, hogy kérésre ki lehessen rajzolni a \emph{canvas-ra}. A program alapértelmezetten kikapcsolva tartja a \emph{Waypoint Module-t}.
+\clearpage
+
+A {\fontfamily{cmtt}\selectfont CReferenceConfigurationCalculator} osztály tesztelését is a vizualizációs szoftverben végeztem, mert itt jobban látható az RC-k megfelelő generálása. A funkcionalitás vizsgálatához létrehoztam egy {\fontfamily{cmtt}\selectfont test.json} állományt, melyben egy egyszerű \emph{scene-t} definiáltam. Ebben kikényszerítem az útvonaltervezőnél, hogy használjon többrészes tervezést azzal, hogy a jármű elé teszek egy magas objektumot. Mivel az A* algoritmus a megadott iterációszámmal nem tudja kikerülni, ezért életbe lép a \emph{Waypoint Module}. A különböző orientációkat a mozgást leíró paraméterek változtatásával, míg az irányokat az objektum- és a start/cél pozíció mozgatásával tudtam tesztelni. A következő két ábrán a párhuzamos RC-k generálásának a tesztesetei láthatók a startpozíció előtti, illetve mögötti céllal.
+
+\begin{figure}[H]
+	\includegraphics[width=1\textwidth]{test_forward}
+	\caption{Az első teszteset (előremenet)}
+	\label{fig:intTestFor}
+\end{figure}
+
+\begin{figure}[H]
+	\includegraphics[width=1\textwidth]{test_back}
+	\caption{A második teszteset (hátramenet)}
+	\label{fig:intTestBack}
+\end{figure}

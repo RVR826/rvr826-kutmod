@@ -1,0 +1,85 @@
+\section{Egyéb felhasznált technológiák}
+
+Ebben a részben a modul elkészítéséhez és működéséhez szükséges egyéb technológiákat is ismertetem. Mivel az alapot képző projekt nagyvállalati környezetben készült, sok keretrendszer és megoldás adott volt, és a megfogalmazott irányelveket követni kellett.
+
+\subsection{\emph{Python} prototípus}
+
+Egy előző megjegyzésben már szerepelt, hogy a valódi implementáció előtt Python prototípus készült az RC-k generálásához és vizualizálásához. Ebben könnyebb volt tesztelni és gyors javításokat végezni, mert nem kellett követni benne a szoros kódolási konvenciókat. E mellett segítette még a prototipizálást, hogy a Python nyelvhez rengeteg bárki számára elérhető könyvtár van szinte bármilyen feladat megoldására. Ezek közül a legfontosabbak számomra a {\fontfamily{cmtt}\selectfont NumPy} és a {\fontfamily{cmtt}\selectfont PyPlot} könyvtárak voltak. Az előbbi a matematikai számítások (például költségszámításnál mátrixszorzás) egyszerűsítésére volt hasznos, míg az utóbbi a vizualizálást segítette. \\
+
+\lstset{caption={A költségszámítás prototípusa Python-ban}, label=src:calcCostPy}
+\begin{lstlisting}[language={Python}]
+def calc_cost(landmark, start_pose, path_length, direction_changes):
+    r_l = 10.
+    r_SP = 50.
+    r_u = 0.1
+    r_v = 1.
+    r_theta = 3.5
+    R_L = np.diag([r_u, r_v, r_theta])
+    e_qL = np.array([0., 0., 0.])
+    
+    local_x, local_y = common.translate_to_local(start_pose[0], start_pose[1], landmark[0], landmark[1], landmark[2])
+    e_qL[0] = abs(local_x)
+    e_qL[1] = abs(local_y)
+    e_qL[2] = min(abs(start_pose[2] - landmark[2]), common.constrain_angle_to_2pi(start_pose[2] - landmark[2]))
+
+    return np.matmul(np.matmul(e_qL, R_L), e_qL) + r_l * path_length + r_SP * direction_changes
+\end{lstlisting}
+
+A forráskódban látszik, hogy a {\fontfamily{cmtt}\selectfont NumPy} csomagban adott a mátrixszorzás, diagonális mátrix képzés és a vektorok összeadása is, így ezek implementálásával nem kellett időt tölteni. A másik feladat az RC-k vizualizálása volt, amihez pedig szükség volt a jármű ábrázolására, forgatására és eltolására. A járművet pontok vektoraként ábrázoltam, így a {\fontfamily{cmtt}\selectfont PyPlot} ki tudja rajzolni azt, és a transzformációk is könnyen elvégezhetők. Ezek a metódusok a {\fontfamily{cmtt}\selectfont plot.py} \emph{file-ban} vannak definiálva.
+
+\begin{figure}[H]
+    \centering
+	\includegraphics[width=300px, height=290px]{images/rc_30.png}
+	\caption{{\fontfamily{cmtt}\selectfont plot.py} kimenete egy adott $\theta$ szöghöz}
+	\label{fig:plotPyOutPut}
+\end{figure}
+
+\subsection{\emph{CMake build} rendszer}
+
+Mivel a keretprojekt beágyazott rendszerre készül, és \emph{Linux} rendszeren van tesztelve, szükség van egy \emph{cross-platform build} rendszerre. Ezt a feladatot a \emph{CMake} végzi. Minden kompozitnak külön {\fontfamily{cmtt}\selectfont CMakeLists.txt} \emph{file-ja} van, amiben az adott modul függőségeit és felhasznált forráskódjait írjuk le. Így \emph{rebuild} esetén elég csak azt a kompozitot, és annak is csak azon részét újrafordítani, amiben a módosítást végeztük. E mellett képes a rendszer külön \emph{Debug} és \emph{Release build-eket} készíteni, amik fontosak a tesztelésnél. Minden \emph{unit} tesztcsomaghoz is külön {\fontfamily{cmtt}\selectfont CMakeLists.txt} tartozik, hogy mindegyikhez külön futtatható állományt tudjunk készíteni.
+\clearpage
+
+\lstset{caption={A \emph{Waypoint Module} CMakeLists.txt \emph{file-jának} felépítése}, label=src:cmakeLists}
+\begin{lstlisting}[language={make}]
+set(LIB_NAME waypoint_module)
+
+set(TARGET_NAME ${LIB_NAME})
+add_library(${TARGET_NAME})
+
+add_library(${PROJECT_NAME}::${LIB_NAME} ALIAS ${TARGET_NAME})
+
+target_link_libraries(${TARGET_NAME}
+    PRIVATE
+    PUBLIC vfc::vfc rbp_pp::common
+)
+
+target_sources(${TARGET_NAME} PRIVATE "src/reference_configuration_calculator.cpp" "src/waypoint_module_helpers.cpp")
+
+target_include_directories(${TARGET_NAME} PUBLIC "inc")
+
+install(TARGETS ${TARGET_NAME} LIBRARY DESTINATION lib)
+install(DIRECTORY "inc/" DESTINATION "include/${TARGET_NAME}")
+
+if(NOT DEFINED DISABLE_UTF)
+    add_subdirectory(test/unit_test)
+endif()
+
+set_target_properties(${TARGET_NAME} PROPERTIES rb_export_as_package_component ${PROJECT_NAME}::${TARGET_NAME})
+\end{lstlisting}
+\clearpage
+
+\subsection{Verziókezelés}
+Mind a C++ implementáció, mind a \emph{Python} prototípus elkészítésének segítésére a {\fontfamily{cmtt}\selectfont Git} verziókezelő rendszert használtam. Az előbbi tárolását a Robert Bosch Kft. által biztosított és \emph{host-olt} {\fontfamily{cmtt}\selectfont BitBucket} példányon tettem, míg a másodikat a {\fontfamily{cmtt}\selectfont GitHub} nyílt oldalon tároltam. A {\fontfamily{cmtt}\selectfont BitBucket} rendszerhez kapcsolódik egy {\fontfamily{cmtt}\selectfont Jenkins} példány is, melyeken különböző \emph{pipeline-ok} vannak tesztelés céljából. Ezek között szerepel:
+\begin{itemize}
+	\item \emph{Process} - Kódolási konvenciókat ellenőriz ({\fontfamily{cmtt}\selectfont .cpp} és \emph{CMake file-ok} formátuma)
+	\item \emph{Target} - Különböző platformokra épít, \emph{unit} teszteket futtat és magasabb integrációs problémákat keres, sikertelen ha egy itt tett változás hibát okoz egy felsőbb \emph{subsystem-ben}
+	\item \emph{Quality} - Statikus kódelemzést végez
+	\item \emph{Coverage} - \emph{Unit} teszt lefedettséget vizsgál
+	\item \emph{Custom Checks} - Kompozit és teljesítményt vizsgáló teszteket futtat
+\end{itemize}
+Biztonsági célokból kifolyóan, ha bármelyik sikertelenül zárul, az adott változtatásokat nem lehet a fő ágra \emph{merge-elni}. A {\fontfamily{cmtt}\selectfont GitHub}-on lévő \emph{repository} sokkal egyszerűbb, nem tartozik hozzá semmilyen \emph{build job} vagy \emph{pipeline}. Erre nincs is szükség, hiszen a végeredmény nem kerül be a végleges szoftverbe.
+
+\subsection{\emph{Stack size} mérés}
+
+A statikus \emph{stack size} mérést az útvonaltervező fő \emph{CMake file-jában} lehet bekapcsolni. A {\fontfamily{cmtt}\selectfont set(CMAKE\_CXX\_FLAGS "\${CMAKE\_CXX\_FLAGS} -fstack-usage")} utasítást a már jelen lévő {\fontfamily{cmtt}\selectfont set()}-ek után kell beszúrni. Előfeltétele ennek, hogy telepítve legyen egy kiegészítő csomag, \emph{"TimoNachstedt.stack-usage"}, mely beszerezhető a \emph{Visual Studio Code} kiegészítői közül. Ha így építjük az útvonaltervezőt, minden (nem \emph{template-es}) osztálynak megjelenik a mérete bájtban. Ezt úgy vizsgálhatjuk meg, ha az osztály nevére visszük az egérmutatót a definíciójánál.
+\clearpage

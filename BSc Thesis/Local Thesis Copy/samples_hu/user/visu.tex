@@ -1,0 +1,197 @@
+\section{A vizualizációs szoftver}
+Az útvonaltervezőt, és ezzel együtt a \emph{Waypoint Module-t} is vizualizációs szoftver segítségével teszteltem. Így lehetőség van tesztelni a legtöbb funkciót anélkül, hogy egy valós járműbe integrálnánk a projektet. Segítség még, hogy nem kell felhasználni más \emph{subsystem-eket}, hogy működni tudjon a tervezés, így önállóan csak az útvonaltervezőre lehet fókuszálni. A teljes vizualizációs szoftver C++ nyelven a Qt keretrendszerrel készült.
+
+Ebben a részben bemutatom, hogyan lehet használni a szoftvert, a felhasználói felület elemei milyen funkcióval bírnak, és milyen beállítások lehetségesek a járművekhez és a tervezéshez. Kitérek még a \emph{scene-ek} készítésére, mentésére és betöltésére is.
+
+\subsection{A felhasználó felület elemei}
+Amikor belép a felhasználó az alkalmazásba, minden alapállapotban van. Ez azt jelenti, hogy:
+\begin{itemize}
+    \item A startpont a $(0,0,0)$, a célpont pedig az $(1, 0, 0)$ pont
+    \item A jármű kontúrja a {\fontfamily{cmtt}\selectfont black\_lion.json}, nincs biztonsági távolság beállítva
+    \item Csak a start- és a célpontban lévő jármű van vizualizálva
+    \item Nincsenek akadályok a \emph{scene-en}
+\end{itemize}
+
+A felhasználói felület 4 részre osztható fel. Ezek pedig a következők:
+\begin{itemize}
+    \item Eszköztár, a képernyő felső részén
+    \item Paraméterbeállítások, a képernyő bal oldalán
+    \item Vizualizációs \emph{canvas}, középen
+    \item Eredmények, a képernyő jobb oldalán
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+	\includegraphics[width=1\textwidth]{qt_start}
+	\caption{A felhasználói felület belépéskor}
+	\label{fig:qtOnEnter}
+\end{figure}
+
+Az eszköztárban találhatók az alapvető funkciókat végző gombok. Ezek segítségével lehet útvonaltervezést indítani (\emph{"Plan"}), törölni az objektumokat a \emph{scene-ről} (\emph{"Clear"}), menteni illetve betölteni (\emph{"Load", "Save"}) és exportálni a tervezett útvonalat (\emph{"Export path"}). A program megadott formátumú {\fontfamily{cmtt}\selectfont .json} kiterjesztésű \emph{file-okat} képes kezelni, a mentés is ilyen formában történik. Az exportálás két állományba történik: {\fontfamily{cmtt}\selectfont planned\_path.csv} és {\fontfamily{cmtt}\selectfont smoothed\_path.csv}. Az elsőben az eredeti utat menti a szoftver, míg a másodikba a simított útvonalat, amelyet a járművel zökkenőmentesebben lehet megtenni. Az eredeti út a \emph{file-ban} primitívek formájában, míg a simított útvonal diszkrét pontokként szerepel.
+
+Az eredményeket ábrázoló grafikonok több oldalon vannak ábrázolva. Az elsőn a különböző tervezési költségek szerepelnek (mind az idő függvényében):
+\begin{itemize}
+    \item Visszamaradó ívhossz
+    \item Visszamaradó \emph{running cost}
+    \item A heurisztika értéke
+\end{itemize}
+Ezek alapján lehet vizsgálni, hogy minden \emph{Motion Primitive} után mennyit közelített a célponthoz a jármű. A második és harmadik grafikon a simított útvonalakon vizsgálja a jármű és a kormányzott kerekei szögének változását ugyanúgy az idő függvényében.
+
+A paraméterbeállításokról és a vizualizációs \emph{canvas-ról} a következő alpontban beszélek részletesebben.
+
+\subsection{Útvonaltervezés beállítása, indítása}
+Az útvonaltervezéshez szükséges beállítások mind a képernyő bal oldalán, a paraméterbeállításoknál találhatók. Az első modulban az általános beállítások szerepelnek. Ezek  három oldalra vannak osztva:
+\begin{itemize}
+    \item \emph{"Vehicle"} - járműbeállítások
+    \item \emph{"Visualization"} - vizualizációs beállítások
+    \item \emph{"Planner"} - az útvonaltervező beállításai
+\end{itemize}
+A járműbeállításokban két lehetőség van a személyre szabáshoz: a jármű típusának kiválasztása és a kontúrtípus beállítása. A kontúrtípus lehet a jármű körvonalával megegyező (\emph{Original}) vagy biztonsági távolsággal ellátott (\emph{Safety}).
+\begin{note}
+    Ezeket a távolságértékeket a \emph{"Parameters"} menü \emph{"Misc"} oldalán tudjuk állítani. Első, hátsó, jobb- és baloldali értékek megadására van lehetőség (méterben).
+\end{note}
+\clearpage
+
+Háromféle járműtípus kiválasztására van lehetőség:
+\begin{itemize}
+    \item Black Lion (Peugeot 508)
+    \item Rhino (Range Rover)
+    \item Grand Wagoneer (Jeep Grand Wagoneer)
+\end{itemize}
+Ezeket a kontúrokat is {\fontfamily{cmtt}\selectfont .json} \emph{file-okban} tárolja a program, melyekben a jármű körvonalának bizonyos $x$ és $y$ koordinátái szerepelnek a $(0, 0)$ ponthoz képest.
+\begin{figure}[H]
+    \centering
+	\includegraphics[width=300px]{vehicle_contours}
+	\caption{A választható járművek kontúrjai}
+	\label{fig:vehicleContours}
+\end{figure}
+
+A vizualizációs beállításokkal lehet vezérelni, hogy mit és mit ne jelenítsen meg a program a \emph{canvas-on}. Minden opcióhoz egy \emph{checkbox} tartozik, ezek a következők:
+\begin{itemize}
+    \item start- és célponton lévő jármű kontúrja
+    \item \emph{waypoint-ok} kontúrjai
+    \item az egér aktuális pozíciója
+    \item a járművek visszapillantó-tükrei
+    \item a megtett út kontúrja (primitívenként)
+    \item a tervezett út cseréje simított útra
+\end{itemize}
+A startpozíció rózsaszínnel, a célpozíció világoskékkel és a felhasznált \emph{waypoint-ok} zölddel vannak ábrázolva. Ha be van kapcsolva a megtett út kontúrjának vizualizálása, akkor minden primitív végénél megjelenik egy másolata a jármű körvonalának. Ennek kitöltése sötétszürke ha a mozdulat előre történik, különben pedig világosszürke. A képernyő alján vannak további vizualizációs lehetőségek is, kirajzolhatók a \emph{node expansion-ök} és mozdulatonként is ábrázolható az útvonal. Ezeket a megfelelő gombokkal kell bekapcsolni. Lenyomásra kirajzolja őket a program, ha rendelkezésre állnak, és a \emph{"Reset"} gombbal lehet eltüntetni.
+
+Az útvonaltervezés beállításainak utolsó oldalán szerepelnek a \emph{planner} beállítási lehetőségei. Itt van lehetőség be- és kikapcsolni bizonyos funkciókat, mint:
+\begin{itemize}
+    \item Fordított tervezés
+    \item Előző tervezések vizualizálása
+    \item \emph{Waypoint Module}
+    \item \emph{Post-Smoothing} algoritmusok váltása
+\end{itemize}
+
+A fordított tervezésnél a cél- és a startpontok megcserélődnek, és visszafelé történik a tervezés. Hasznos lehet több esetben, mert a tervező algoritmus kevesebb iterációból talál ki két objektum közül (például 90°-os parkolásnál), mint amennyiből betalál a köztük lévő helyre. A \emph{Waypoint Module} aktiválásával kapcsolhatja be a felhasználó a többrészes tervezést. Ha be van kapcsolva az előző tervezések vizualizálása, lehetőség van megadni, hogy mennyi előző utat rajzoljon ki a szoftver (1-10 között). Ezek az utak a piros helyett szürkével jelennek meg.
+\begin{note}
+    A fordított tervezés és a \emph{Waypoint Module} együtt nem használható.
+\end{note}
+
+A paramétereknél és a bemeneti adatoknál lehet további beállításokat megadni. Itt állítható a heurisztika típusa, a különböző típusspecifikus paramétereik és az irányváltási büntetőérték is. A bemeneti adatoknál adható meg a start- és a célpont, és a hozzájuk tartozó tolerancia. Ha az algoritmus ezen belüli pontot talál, a tervezés sikeresnek tekinthető. Itt állíthatók a \emph{Waypoint Module-höz} tartozó paraméterek is. Az ezek a beállítások a \emph{"Parameters"} rész \emph{"Waypoint Module"} oldalán találhatók. Ha minden elem beállításra került, a \emph{"Plan"} gomb megnyomásával indítható a tervező.
+\begin{figure}[H]
+    \centering
+	\includegraphics[width=1\textwidth]{qt_planning}
+	\caption{Egy tervezés eredménye}
+	\label{fig:planningResult}
+\end{figure}
+
+\subsection{\emph{Scene-ek} készítése, betöltése, mentése}
+A következő része a felhasználói felületnek a vizualizációs \emph{canvas} és a hozzá tartozó objektumlista. Ezen a modulon jelennek meg a kirajzolt tárgyak, járművek és útvonalak. Ezek közül az egyik legfontosabb funkció az objektumok megjelenítése, amiket lehetőség van \emph{file-ból} betölteni vagy kézzel rajzolni.
+
+A kézzel való objektumkészítés megkezdéséhez az 'O' billentyűt kell megnyomni. Ilyenkor a program átvált \emph{Object Placement} módba. Ebben a módban minden eddig tárgyalt funkció működik, és kiegészül még az objektumkészítéssel is. A rajzoláshoz a bal vagy középső egérgombbal kell a \emph{canvas-ra} kattintani, ilyenkor lekerül egy pontja az objektumnak. Maximum 16 pontból állhat egy ilyen rajzolt objektum, ezeket a pontokat a program lehelyezési sorrendben automatikusan összeköti. Ha kevesebb pontból álló akadályt szeretne készíteni a felhasználó, az \emph{'ENTER'} billentyű megnyomásával elkészül az objektum.
+
+Lehetőség van magas, illetve alacsony objektumok készítésére is. Az alacsony akadályokon a jármű képes áthaladni, míg a magasakon nem. Lehetséges kombinált objektum létrehozására is, ilyenkor a következő szabályok szerint működik a magasság eldöntése:
+\begin{itemize}
+    \item Ha két szomszédos pont mindegyike alacsony, a köztük lévő vonal is alacsony
+    \item Különben az őket összekötő vonal magas
+\end{itemize}
+
+A rajzoláskor alacsony pontot a középső egérgombbal lehet lehelyezni, míg magasat a ballal. A \emph{canvas-on} az alacsony vonalak kékkel, a magasak feketével és az éppen rajzoltak pedig világoszölddel jelennek meg. Egy elkészült objektum látható az \emph{"Obstacles on scene"} oldalon is, a felhasználói felület jobb oldalán. Itt kijelölhető akármelyik lehelyezett akadály, ilyenkor a \emph{canvas-on} piros színre vált. A kijelölt objektumot a \emph{'DEL'} billentyűvel lehet törölni. A felhasználó az \emph{'ESC'} billentyűvel tud visszatérni az alap módba. 
+\begin{figure}[H]
+    \centering
+	\includegraphics[width=1\textwidth]{qt_objects}
+	\caption{Alacsony, magas, kombinált és aktív objektumok}
+	\label{fig:objectTypes}
+\end{figure}
+Előre elkészített kör és téglalap lehelyezésére is van lehetőség. Ezt a \emph{"Create obstacle"} oldalon lehet megtenni, miután megadta a felhasználó a megfelelő adatokat. Kör esetén ez a középpont $x$ és $y$ koordinátája, illetve a sugara. Téglalapnál pedig a középpont $x$ és $y$ koordinátája, a szélessége és magassága, illetve az elforgatása.
+
+A kész objektumok mozgatására is van lehetőség, \emph{Object Movement} módba az 'M' billentyű lenyomásával lehet váltani. Ilyenkor az akadályokat \emph{drag-and-drop} módszerrel lehet mozgatni a teljes \emph{canvas-on}. A legutolsó elmozdított objektum automatikusan kijelölésre kerül a jobboldali listában is.
+
+A másik módja a \emph{scene-ek} használatának a \emph{file-ból} való betöltés. Ehhez egy megfelelő formátumú {\fontfamily{cmtt}\selectfont .json} állományt kell elkészíteni, mely a következőképpen épül fel:
+\clearpage
+
+\lstset{caption={Bemeneti {\fontfamily{cmtt}\selectfont .json} állomány felépítése}, label=src:inputJson}
+\begin{lstlisting}[language={json}]
+{
+    "PmpParameters": "default",
+    "CommonParameters": "default",
+    "Frames": {
+        "0": {
+            "PlanningRequest": {
+                "m_startDirection": "startBackward",
+                "m_startPosture": {
+                    "m_pose": [0.0, 0.0, 0.0],
+                    "m_curvature": 0.0
+                },
+                "m_targetArea": {
+                    "m_targetPosture": {
+                        "m_pose": [1.0, 0.0, 0.0],
+                        "m_curvature": 0.0
+                    },
+                    "m_lateralTolerance": 0.03,
+                    "m_longitudinalTolerance": 0.03,
+                    "m_orientationTolerance": 0.049742,
+                    "m_targetDirection": "startBackward"
+                }
+            },
+            "NfmAggregatedPolygonObjects": [
+                {
+                    "nfmPolygonObjectNodes": [
+                        {
+                            "m_x": 1.869132,
+                            "m_y": -3.324296,
+                            "m_height": "HIGH"
+                        },
+                        {
+                            "m_x": 2.747248,
+                            "m_y": -2.333279,
+                            "m_height": "HIGH"
+                        }
+                    ]
+                }
+            ]}}}
+\end{lstlisting}
+
+Ezeket a \emph{file-okat} nem ajánlott kézzel elkészíteni, hiszen egy már megrajzolt \emph{scene} mentésére is van lehetőség. A \emph{"Save"} gomb lenyomása után ki kell választani a megfelelő mappát, ahova a \emph{file-t} szeretné menteni a felhasználó, majd a \emph{"Save"} lehetőségre kattintani a felugró ablakban. A \emph{file} névhez nem szükséges hozzáírni a {\fontfamily{cmtt}\selectfont .json} kiterjesztést, a program automatikusan kiegészíti azt. Ha viszont hozzáírja a felhasználó, akkor nem kerül rá kétszer.
+
+Minden \emph{input-hoz} meg van adva egy intervallum, amelyben a hozzájuk kötött értékek mozoghatnak. Ezeket a következő táblázatban ismertetem.
+
+\begin{table}[htb]
+	\centering
+	\begin{tabular}{ | c | c | c | }
+		\hline
+		\multirow{2}{*}{\textbf{Paraméter}} & \multicolumn{2}{ c | }{\textbf{Limit}} \\
+		\cline{2-3}
+		& Min. & Max\\
+		\hline \hline		
+		Téglalap magassága / szélessége & 0 & 1000 \\
+		\hline
+		Kör sugara & 0 & 1000  \\
+		\hline
+		Kör és téglalap középpontja & $(-1000,-1000)$ & $(1000, 1000)$ \\
+		\hline 
+		Forgatások (téglalap, \emph{start}, \emph{target}, $\sigma\theta$) & 0 & 360 \\
+		\hline 
+		\emph{Start-, target} pozíciók & $(-10,-10)$ & $(10,10)$ \\
+		\hline 
+		Minimum mozgás egyenes irányba & 0 & 10 \\
+		\hline 
+	    $\sigma$ értékek (kivéve $\theta$) & 0 & 10 \\
+		\hline 
+	\end{tabular}
+	\caption{Legfontosabb paraméterek limitációi}
+	\label{tab:paramLimits}
+\end{table}

@@ -1,0 +1,105 @@
+\chapter{Szimulációs eredmények}
+\label{appx:simulation}
+
+Miután elkészült a \emph{Waypoint Module}, a vizualizációs környezetben több teszteseten is szimuláltam a működését. Ezeket összehasonlítottam a modul nélkül működő útvonaltervező teljesítményével és az eredményeket dokumentáltam. Az összes \emph{scene-nél} az első táblázatban látható beállításokat használtam a \emph{Waypoint Module} elmozdulást leíró paramétereihez. Ezek az értékek egy általános beállításnak felelnek meg a \emph{Black Lion} járműhöz, biztonsági távolság használata nélkül. A paraméterek helytálltak mind nyílt, mind zárt terekben. Az elmozdulást leíró paraméterek az első, míg a jármű méretei a második táblázatban láthatók.
+\begin{table}[h]
+    \centering
+	\begin{tabular}{ | c | c | l | }
+		\hline
+		\multirow{2}{*}{\textbf{Paraméter}} & \multicolumn{2}{ c | }{\textbf{Paraméter értéke}} \\
+		\cline{2-3}
+		& Érték & Mértékegység\\
+		\hline \hline		
+		$\Delta x$ & 5 & $m$ \\
+		\hline
+		$\sigma_{PLo}$ & 1,2 & $m$  \\
+		\hline
+		$\sigma_{PLa}$ & 0,8 & $m$ \\
+		\hline 
+		$\sigma_{OLo}$ & 0,75 & $m$ \\
+		\hline 
+		$\sigma_{OLa}$ & 3 & $m$ \\
+		\hline 
+		$\sigma_\theta$ & 12 & ° \\
+		\hline 
+	\end{tabular}
+    \label{tab:testParams}
+    \caption{Szimulációban használt paraméterek}
+\end{table}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|c|c|}
+        \hline
+        Hossz & $4,75m$ \\
+        \hline
+        Szélesség & $1,86m$ \\
+        \hline
+        Tengelytávolság & $2,79m$ \\
+        \hline
+    \end{tabular}
+    \label{tab:blackLionParams}
+    \caption{A jármű tulajdonságai}
+\end{table}
+\clearpage
+
+Minden esetben\emph{debug} módban futtattam a programot, hogy jobban lehessen vizsgálni a program futása közben a belső értékeket, és így jobban mutatkoznak a futási időbeli eltérések.
+
+Az első teszteset egy nagyobb parkológarázst szimulál. Itt a fal melletti egyetlen üres helyre szeretnénk parkolni úgy, hogy 90°-os szöget zár be start- és a célpozíció. Nehezíti még, hogy minden oldalról fal veszi körbe a manőverezési területet, így nem tehet nagyon hosszú mozdulatokat a jármű. Ezt a \emph{scene-t} az útvonaltervező a \emph{Waypoint Module} használata nélkül nem képes teljesíteni, viszont a használatával igen. Az alábbi ábrán látható a tervezés végeredménye.
+\begin{figure}[H]
+    \centering
+	\includegraphics[width=350px]{last_slot_scene}
+	\caption{A \emph{BackInGarage} teszteset}
+	\label{fig:lastSlotScene}
+\end{figure}
+\clearpage
+
+A második teszteset hasonlít az integrációs tesztben látott \emph{scene-re}, a start- és a célpont között egy nagyobb objektum található. Ezt a tervező már csak több \emph{waypoint} lehelyezésével képes teljesíteni. Az alábbi ábrán látható a tervezés végeredménye.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=350px]{object_middle_scene}
+    \caption{A \emph{ObstacleMiddle} teszteset}
+    \label{fig:objInMiddleScene}
+\end{figure}
+
+A harmadik teszteset szinte megegyezik az első integrációs teszttel, de minimálisan elmozdítottam a start- és célpozíciót, és a középső falat is. Azért mutatok be két ennyire hasonló \emph{scene-t}, mert szerintem ez a legfontosabb használati esete a \emph{Waypoint Module-nak}. Ösztönzi az A* algoritmust, hogy felfedezze a körülötte lévő területet. Ha a modul nélkül futtatjuk az útvonaltervezőt ezen a teszten, akkor látszik, hogy a \emph{node expansion-ök} mind az objektum irányába történnek. Ez az oka, hogy nem talál útvonalat a tervező, pedig csak egy egyszerű hátramenettel kikerülhető a fal.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=300px]{wall_middle_nodeexps_wo}
+    \caption{\emph{Node expansion-ök} a modul használata nélkül}
+    \label{fig:nodeExpansionWo}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=350px]{wall_middle_scene}
+    \caption{A \emph{WallMiddle} teszteset}
+    \label{fig:wallMidScene}
+\end{figure}
+\clearpage
+
+Az általam futtatott szimulációs eredmények a következő táblázatban találhatók. Minden \emph{scene} kétszer szerepel, először a \emph{Waypoint Module} használata nélkül, majd annak segítségével, így összehasonlítható a futási idő és az iterációszám. A \emph{Release} módbeli futási idő minden \emph{scene-hez} nagyjából $1s$.
+\begin{table}[h]
+    \centering
+	\begin{tabular}{ | p{0.25\textwidth} | p{0.2\textwidth} | p{0.1\textwidth} | p{0.2\textwidth} | p{0.1\textwidth} | }
+		\hline
+		{\textbf{\emph{Scene}}} & \textbf{\emph{Waypoint-ok} száma} & {\textbf{Futási idő}} & \textbf{Iterációszám} & \textbf{Út hossza} \\
+        \hline
+        \hline
+        BackInGarage & - & $5s$ &  20001 & - \\
+        \hline
+        BackInGarage & 1 & $6s$ &  22576 & $18,3m$ \\
+        \hline
+        ObstacleMiddle & - & $4s$ &  20001 & - \\
+        \hline
+        ObstacleMiddle & 2 & $7s$ &  23994 & $33,6m$ \\
+        \hline
+        WallMiddle & - & $6s$ &  20001 & - \\
+        \hline
+        WallMiddle & 2 & $8s$ &  25093 & $27,2m$ \\
+        \hline
+	\end{tabular}
+    \label{tab:results}
+    \caption{Szimulációs eredmények}
+\end{table}
+
+Az eredményeken látszik, hogy a \emph{Waypoint Module} használata nem emel sokat az A* algoritmus iterációszámán, hiszen egy teljes 20.000 iterációs tervezés történik, mielőtt a modul életbe lépne. Látszik még, hogy a sikeres tervezéshez nem kell sok \emph{waypoint-ot} használni. Minnél többet generál a tervező, annál valószínűbb, hogy a \emph{scene} nem teljesíthető.

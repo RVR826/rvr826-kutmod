@@ -1,0 +1,117 @@
+\section{A modul funkciói}
+Ebben a részben ismertetem az elkészített \emph{Waypoint Module} funkcióit, és a felhasználói eseteket különböző felhasználóknak és a fejlesztőknek is. Először bemutatom a \emph{user story-kat}, majd részletesebben is kifejtem a felhasználói eseteket.
+
+\subsection{\emph{User story-k}}
+
+\begin{center}
+	\begin{longtable}{ | p{0.5\textwidth} | p{0.5\textwidth} | }
+		\hline
+		\emph{User story} & Elfogadási kritérium
+		\\ \hline \hline
+        \endfirsthead
+        
+		\hline
+        \emph{User story} & Elfogadási kritérium
+		\\ \hline \hline
+        \endhead
+		
+		\textbf{AS} a user, & \textbf{GIVEN} a scene fails, \\
+        \textbf{I WANT} to be able to plan paths using waypoint generation, & \textbf{WHEN} I use the planner without waypoints, \\
+        \textbf{SO THAT} more scenes can be completed & \textbf{THEN} I can try the scene with waypoint generation \\
+        \hline
+		
+		\textbf{AS} a user, & \textbf{GIVEN} a scene passed before, \\
+        \textbf{I WANT} to be able to disable waypoint generation, & \textbf{WHEN} I used the planner without waypoints, \\
+        \textbf{SO THAT} faster runtime and shorter paths are achived & \textbf{THEN} I can disable the module from the parameters \\
+        \hline
+        
+		\textbf{AS} a user, & \textbf{GIVEN} the source code is available, \\
+        \textbf{I WANT} to build the module easily, & \textbf{WHEN} I build, \\
+        \textbf{SO THAT} it is compatible with the planner library & \textbf{THEN} I can use  {\fontfamily{cmtt}\selectfont CMakeLists.txt} files for \emph{CMake}\\
+        \hline
+        
+		\textbf{AS} a user, & \textbf{GIVEN} the module is on, \\
+        \textbf{I WANT} to customize the values for RC generation, & \textbf{WHEN} I run a path planning, \\
+        \textbf{SO THAT} it is compatible with my vehicle & \textbf{THEN} I can set every RC and cost parameter \\
+        \hline
+        
+		\textbf{AS} a developer, & \textbf{GIVEN} I want to test the project, \\
+        \textbf{I WANT} to have a separate test executable, & \textbf{WHEN} I run all tests, \\
+        \textbf{SO THAT} I don't interfere with the other composite's tests and I can generate a testing report for my module & \textbf{THEN} I can see the new test section and it's tests passing \\
+        \hline
+        
+		\textbf{AS} a developer, & \textbf{GIVEN} I open the visualization software, \\
+        \textbf{I WANT} to have visualization integration for the module, & \textbf{WHEN} I want to switch between operating modes, \\
+        \textbf{SO THAT} I can test and demo the changes between the two operating modes & \textbf{THEN} I can do so with a checkbox \\
+        \hline
+        
+    	\caption{\emph{User story-k}}
+    	\label{tab:userStories}
+	\end{longtable}
+\end{center}
+
+\Az\told{\ref{tab:userStories}}+as{} táblázat mutatja a projekt \emph{user story-jait}. A \emph{Waypoint Module} működésének minimális elvárásait fogalmazza meg mindkét felhasználói csoport számára.
+
+\subsection{Felhasználói esetek különböző felhasználóknak}
+A fejezet elején két fő csoportot fogalmaztam meg a modul felhasználóinak, ezek röviden a következők:
+\begin{itemize}
+    \item A könyvtárt használó fejlesztő egy másik \emph{subsystem-ből}
+    \item A könyvtárt egy másik projektbe intergráló fejlesztő
+\end{itemize}
+
+Mindkét csoportnak más lépések szükségesek a használathoz, de vannak közös követelmények is.
+\begin{note}
+    A közös követelmények főleg a futási környezetben és a programozási nyelvben értendők. Ezekről egy későbbi alpontban térek ki.
+\end{note}
+
+Az első csoportba tartozó felhasználóknak csak egy kisebb részét szükséges ismerni az egész modulnak ahhoz, hogy használni tudják a \emph{waypoint} generálást. Ha csak a körülötte lévő útvonaltervezővel együtt kívánja használni, akkor még kevesebb információ szükséges. Mivel a modul már integrálva van az útvonaltervezőbe, ezért a már meglévő paraméterekkel vezérelhető a működése. Itt annyi lehetséges, hogy ki- illetve bekapcsoljuk a \emph{waypoint-ok} használatát. Ennek a folyamata \az\told{\ref{src:toggleWaypoints}}+as{} kódrészleten látható.
+\clearpage
+
+\lstset{caption={A \emph{Waypoint Module} ki- és bekapcsolása, állapotának lekérdezése}, label=src:toggleWaypoints}
+\begin{lstlisting}[language={C++}]
+// Default parameters (waypoints disabled)
+CPpPathPlannerParams params{CPpParams{}}; 
+
+// Enable
+params.overwrite<config::CEnableWaypointModuleParams(
+    config::CEnableWaypointModuleParams::data_type{true}
+);
+
+// Disable
+params.overwrite<config::CEnableWaypointModuleParams(
+    config::CEnableWaypointModuleParams::data_type{false}
+);
+
+// Returns true if the module is enabled, false otherwise
+const auto isEnabled = params.get<config::CEnableWaypointModuleParams>();
+\end{lstlisting}
+
+\begin{note}
+    A modul hozzáadása interfészt nem tört, csak plusz funkcionalitást adott az útvonaltervezőhöz, így aki eddig használta, annak nem kell lényeges változtatást eszközölnie a kódbázisában.
+\end{note}
+
+Azok a felhasználók, akik integrálni szeretnék a saját rendszerükbe a modult, az osztályok API függvényeivel kell kommunikálniuk. Szükséges a könyvtár megfelelő használatához:
+\begin{itemize}
+    \item {\fontfamily{cmtt}\selectfont vfc} keretrendszer
+    \item {\fontfamily{cmtt}\selectfont common::*} osztályok
+\end{itemize}
+
+Az útvonaltervező sem része a modulnak, így annak is rendelkezésre kell állnia. Mivel a \emph{waypoint-ok} egy diszkrét pont segítségével vannak számítva, ezért \emph{Motion Primitive-ekkel} és diszkrét pontokkal ábrázolt útvonalakon is használhatóak. Az integráció lépései a következők:
+\begin{enumerate}
+    \item Ha szükséges, a {\fontfamily{cmtt}\selectfont vfc} keretrendszer helyettesítése
+    \item Ha szükséges, a {\fontfamily{cmtt}\selectfont common::*} osztályok helyettesítése
+    \item A minimális elmozdulást leíró paraméterek finomítása a megfelelő járműhöz
+    \item A költségszámításhoz használt paraméterek finomítása a megfelelő járműhöz
+    \item A modul osztályainak tényleges integrációja a kódbázisba
+\end{enumerate}
+
+Mind a minimális elmozdulást leíró, mind a költségszámításhoz használt paraméterek a {\fontfamily{cmtt}\selectfont waypoint\_module\_params.hpp} osztályban találhatóak. Ezek beállítása fontos, hiszen ezen értékek alapján generálhatóak, illetve rendezhetőek sorba a köztes pontok.
+
+A végfelhasználó az a személy, aki a teljes projektet használja a járműben. Ők közvetlenül nem használják a modult, hiszen egy kész, beépített terméket kapnak. A felhasználói felületen csak a teljes útvonal látható számukra, függetlenül annak előállításától. Egy képernyőkép a végfelhasználó által látható vezérlőről \az\told{\ref{fig:userInterface}}+as{} ábrán látható.
+\begin{figure}[H]
+    \centering
+	\includegraphics[angle=180,width=1\textwidth]{user_interface}
+	\caption{Az autós felhasználói felület}
+	\label{fig:userInterface}
+\end{figure}
+\clearpage

@@ -1,0 +1,26 @@
+\section{Továbbfejlesztési lehetőségek}
+Ebben a részben felvázolom a projekt továbbfejlesztési lehetőségeit. A modul úgy készült, hogy könnyen bővíthető és módosítható legyen, ezért bármely funkció az implementálás után könnyen beépíthető. A felsorolt fejlesztések mind interfésztörés nélkül hozzáadhatók a modulhoz, így a külső felhasználókkal szemben is barátságosak.
+
+\subsection{Fordított tervezés}
+
+Ez a fejlesztési lehetőség a keretprojekt szempontjából eléggé magától értetődő. Mivel az útvonaltervező képes fordított tervezésre, ezért hasznos lenne, ha a \emph{Waypoint Module} is támogatná azt. Vannak \emph{scene-ek}, amiknél a tervező sokkal könnyebben és kevesebb iterációból talál útvonalat, ha a céltól a starthoz keres. Ha az általam készített modul is képes lenne kezelni ezt a változást, akkor gyorsabb lehet a futása az egész útvonaltervezőnek akkor is, ha be van kapcsolva a többrészes tervezés.
+
+\subsection{Pontosabb költségszámítás}
+
+Erre a problémára többféle megoldás is létezik:
+\begin{itemize}
+    \item A* heurisztika használata
+    \item Paraméter optimalizálás külső könyvtárral
+    \item Gépi tanulás alapú paraméteroptimalizálás
+\end{itemize}
+Ezek közül a heurisztika használata könnyebb lehet, hiszen az már adott az útvonaltervezőben. Ebben az esetben a {\fontfamily{cmtt}\selectfont calcCost} függvényben egy kötött képlet és paraméterek használata helyett a beépített heurisztikával lehet becsülni a költséget a \emph{landmark} és a célpont között.
+
+A másik két megoldás mind a meglévő paraméterek optimalizálására épül. Erre két megoldás is adott. Az első a külső könyvtárral való optimalizálás. Erre alkalmas például az \emph{NLopt} \cite{nlopt} könyvtár, mellyel nemlineáris optimalizációt lehet végezni. Előnye, hogy mind \emph{Python}, mind C++ nyelven elérhető, így már a prototípus elkészítése közben lehetőség van a paraméterek meghatározására. A második megközelítés a gépi tanulás alapú paraméteroptimalizálás. Ennek implementációja nehezebb, mint az előző két megoldásé, viszont pontosabb lehet náluk. \cite{aiInAutomotive} E mellett magasabb számítási igénnyel is rendelkezik, mint a többi megoldás, de így lehetőség van többféle megközelítés párhuzamos vizsgálatára is, például evolúciós algoritmusok \cite{evolutionAlgos} vagy mély megerősítéses tanulás. \cite{deepReinforcedLearning}
+
+\subsection{Adaptív mozgásirány-választás}
+
+Ezzel a fejlesztési lehetőséggel lehetőség lenne, hogy pontosabban meghatározza az algoritmus, hogy az előre-, vagy a hátrameneti RC a kedvezőbb \emph{waypoint} jelölt. Így elkerülhető lenne a felesleges próbálkozás, ha a jármű előtt egy objektum van. Megoldaná azt a problémát is, hogy nem halad eleget a jármű az egyik irányba, például egy akadály kikerüléséhez, így újra előre próbálkozik. Ez megoldható a paraméterek állításával is, de ilyenkor \emph{scene} specifikus a beállítás, ami nem biztos, hogy másik esetben is helytálló. Ha a modul képes helyesen meghatározni az optimális mozgásirányt, csökkenhet a \emph{waypoint} generálásának az iterációszáma, így az átlagos futási idő is.
+
+\subsection{Finomított \emph{waypoint} lehelyezés}
+
+Ez a továbbfejlesztés is a \emph{waypoint} generálás iterációszámának csökkentésére irányul, csak másik megközelítéssel. Mivel kötött az RC-k vertikális és horizontális elmozdulása, illetve a fordulás irány és mértéke is, ezért van, hogy egy mozdulat távolodik a céltól. Ha az algoritmus helyesen tudja váltani az elmozdulások előjelét, és a \emph{waypoint-okat} pontosabban tudja egymás után alkalmazni, jelentősen csökkenthető a szükséges RC-k száma. Az adaptív mozgásirány-választással együtt lehetőség lenne teljesen emberszerű parkolási manőverek tervezésére is.

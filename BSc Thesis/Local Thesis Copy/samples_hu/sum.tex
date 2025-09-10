@@ -1,0 +1,46 @@
+\chapter{Összegzés}
+\label{ch:sum}
+
+A dolgozat az autók automatikus parkolását segítő rendszerek útvonaltervezési kihívásaira és azok feldarabolt megközelítésére összpontosít. Az automatikus parkolás egyre fontosabb szerepet játszik az önvezető technológiák fejlődésében, mivel a szűk helyeken történő precíz manőverezés különleges algoritmikus megoldásokat igényel. A dolgozat egyik központi témája az útvonaltervezés több részletben történő végrehajtása, amely növeli a hatékonyságot és csökkenti a számítási komplexitást.
+
+\section{Automatikus parkolás és útvonaltervezés}
+
+Az automatikus parkolás során a járműnek pontosan kell mozognia egy adott térben, minimalizálva az ütközési kockázatokat és optimalizálva az elérhető parkolóhely kihasználását. A hagyományos útvonalkeresési algoritmusok, mint például az A* algoritmus, jól alkalmazhatók ebben a környezetben, mivel determinisztikus és hatékony megoldásokat kínálnak. Az útvonaltervezés során azonban gyakran előfordul, hogy a teljes parkolási manőver egy lépésben való kiszámítása túl bonyolult vagy nem elég rugalmas a környezeti változások kezelésére. Ezért célszerű az útvonaltervezést több részletben végrehajtani.
+\clearpage
+
+\section{Útvonaltervezés több részletben}
+
+A dolgozat egyik legfontosabb hozzájárulása a parkolási útvonalak kisebb részfeladatokra bontásának módszertana. Az alapgondolat az, hogy a jármű először egy közbenső célpontot érjen el, majd innen egy következő lépésben folytassa a parkolási manővert. A részekre osztott útvonaltervezés lehetővé teszi:
+\begin{itemize}
+    \item A komplex mozgások leegyszerűsítését és jobb kontrollálhatóságát
+    \item Az akadályok rugalmasabb kikerülését
+    \item Az újratervezés hatékonyabb végrehajtását változó körülmények esetén
+    \item A számítási terhelés csökkentését, mivel a kisebb problémák gyorsabban megoldhatók
+\end{itemize}
+
+A dolgozat bemutat egy referencia konfigurációs (RC) rendszert, amely meghatározza a közbenső pontokat a parkolási folyamat során. Az RC-k a jármű kinematikai modelljével és a környezeti korlátokkal összhangban generálódnak, biztosítva az optimális parkolási útvonalat.
+
+\section{Alkalmazott algoritmusok és rendszerek}
+
+A dolgozatban részletes elemzés található az alkalmazott algoritmusokról, köztük:
+\begin{itemize}
+    \item A* algoritmus: amely az optimális útvonal kiszámítására szolgál
+    \item \emph{Waypoint}-alapú útvonaltervezés: amely a teljes útvonalat kisebb, könnyebben kezelhető szakaszokra bontja
+    \item Szimulációs tesztek, amelyek igazolják az implementált algoritmusok hatékonyságát és robusztusságát
+\end{itemize}
+
+A fejlesztett rendszer beágyazott környezetben történő alkalmazásra is alkalmas, figyelembe véve az autóipari szabványokat (ISO 16787, ISO 20900), valamint a számítási erőforrások optimalizálását.
+
+\section{Eredmények és jövőbeli fejlesztési lehetőségek}
+
+A dolgozat kísérleti eredményei azt mutatják, hogy a részekre bontott útvonaltervezés jelentősen javíthatja az automatikus parkolás hatékonyságát. Az algoritmus lehetővé teszi az összetett parkolási szituációk sikeres kezelését, miközben csökkenti a tervezési időt és a számítási igényeket.
+
+További fejlesztési lehetőségek közé tartozik:
+\begin{itemize}
+    \item Az adaptív mozgásirány-választás
+    \item A még pontosabb költségszámítás
+    \item Az akadályok dinamikus kezelése
+    \item A gépi tanulás integrációja az útvonaltervezési döntések javítására.
+\end{itemize}
+
+A dolgozatban bemutatott megközelítés fontos lépést jelent az önvezető járművek automatikus parkolási rendszereinek fejlődésében, és alapot biztosít a további kutatásokhoz és fejlesztésekhez.

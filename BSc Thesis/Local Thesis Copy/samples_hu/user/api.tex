@@ -1,0 +1,131 @@
+\section{A \emph{Waypoint Module} használata}
+
+Ahogy azt egy korábbi pontban említettem, az egyik felhasználói csoportnak szüksége van a \emph{Waypoint Module} osztályainak az API függvényeinek ismeretére. Ezek azok az interfészfüggvények és metódusok, amelyek segítségével kommunikálni lehet az objektumokkal. Ebben a fejezetben minden osztály használatát röviden ismertetem.
+
+\subsection{{\fontfamily{cmtt}\selectfont THeapElement}}
+
+A {\fontfamily{cmtt}\selectfont THeapElement} osztály a \emph{heap} elemeit megvalósító \emph{template}, melynek argumentuma a benne tárolt adat típusa. Ezt egészíti ki egy költségértékkel, amely szerint sorba is rendezhetők az objektumok. Az API függvényei a következők:
+\begin{itemize}
+    \item {\fontfamily{cmtt}\selectfont getCost()} - lekérdezi a költségértéket
+    \item {\fontfamily{cmtt}\selectfont setCost(vfc::float32\_t f\_cost)} - beállítja a költségértéket
+    \item {\fontfamily{cmtt}\selectfont value()} - lekérdezi a tárolt adatértéket
+\end{itemize}
+
+\subsection{{\fontfamily{cmtt}\selectfont CMinBinaryHeap}}
+
+A {\fontfamily{cmtt}\selectfont CMinBinaryHeap} osztály egy \emph{min binary heap-et} megvalósító osztály, melynek \emph{template} argumentumai a benne tárolt érték típusa, és a maximális méret. Nem kötelező az előző alpontban említett osztályt használni tárolt típusnak, de előfeltétel, hogy sorbarendezhetőek legyenek a benne lévő értékek. Az API függvényei a következők:
+\begin{itemize}
+    \item {\fontfamily{cmtt}\selectfont size()} - lekérdezi a tárolt elemek számát
+    \item {\fontfamily{cmtt}\selectfont insert(const HeapElementType\& f\_heapElement)} - beszúr egy új elemet a \emph{heap-be}, ha az nincs tele
+    \item {\fontfamily{cmtt}\selectfont removeMinimum()} - lekérdezi és törli a minimum költségű elemet
+    \item {\fontfamily{cmtt}\selectfont getMinimum()} - lekérdezi a minimum költségű elemet
+    \item {\fontfamily{cmtt}\selectfont clear()} - kiüríti a \emph{heap-et}
+    \item {\fontfamily{cmtt}\selectfont isEmpty()} - lekérdezi, hogy üres-e a \emph{heap}
+\end{itemize}
+
+\subsection{{\fontfamily{cmtt}\selectfont CWaypointModuleParams}}
+A {\fontfamily{cmtt}\selectfont CWaypointModuleParams} osztály felelős a \emph{waypoint} számításhoz, és a költségszámításhoz szükséges értékek tárolásáért. A benne lévő összes értékhez tartozik egy \emph{getter} és egy \emph{setter} függvény a megfelelő paraméterrel. Ezek az értékek a következők:
+\begin{itemize}
+    \item {\fontfamily{cmtt}\selectfont m\_minMoveLength} - Minimum mozgás egyenes irányba
+    \item {\fontfamily{cmtt}\selectfont m\_sigmaParallelLongitudinal} - Párhuzamos mozdulat esetén a hosszanti elmozdulás
+    \item {\fontfamily{cmtt}\selectfont m\_sigmaParallelLateral} - Párhuzamos mozdulat esetén a keresztirányú elmozdulás
+    \item {\fontfamily{cmtt}\selectfont m\_sigmaOrthogonalLongitudinal} - Merőleges mozdulat esetén a hosszanti elmozdulás
+    \item {\fontfamily{cmtt}\selectfont m\_sigmaOrthogonalLateral} - Merőleges mozdulat esetén a keresztirányú elmozdulás
+    \item {\fontfamily{cmtt}\selectfont m\_sigmaYaw} - A jármű állása beli eltérés a mozdulat végére
+    \item {\fontfamily{cmtt}\selectfont m\_paramMoveLength} - Költségszámításnál használt, az úthossz paramétere
+    \item {\fontfamily{cmtt}\selectfont m\_paramDirectionChange} - Költségszámításnál használt, az irányváltások számának paramétere
+    \item {\fontfamily{cmtt}\selectfont m\_paramDeviationX} - Költségszámításnál használt, az $x$-beli eltérés paramétere
+    \item {\fontfamily{cmtt}\selectfont m\_paramDeviationY} - Költségszámításnál használt, az $y$-beli eltérés paramétere
+    \item {\fontfamily{cmtt}\selectfont m\_paramDeviationYaw} - Költségszámításnál használt, az $\theta$-beli eltérés paramétere
+\end{itemize}
+
+\subsection{{\fontfamily{cmtt}\selectfont CReferenceConfigurationCalculator}}
+
+A {\fontfamily{cmtt}\selectfont CReferenceConfigurationCalculator} osztály felelős a köztes pontokat képző \emph{reference configuration-ök} generálásáért egy adott \emph{landmark-hoz} és a célponthoz képest. Feladata még ezen pontok tárolása és sorbarendezése is. Az API függvényei a következők:
+\begin{itemize}
+    \item {\fontfamily{cmtt}\selectfont addLandmark(const common::CPose\& f\_landmark)} - új \emph{landmark} felvétele a tárolóba
+    \item {\fontfamily{cmtt}\selectfont getNextReferenceConfigurations()} - a célponthoz képest legkedvezőbb két \emph{reference configuration} lekérdezése
+    \item {\fontfamily{cmtt}\selectfont reInit(const common::CPose\& f\_startPose, const common::CPose\& f\_targetPose)} - az objektum újrainicializálása új start- és célponttal
+    \item {\fontfamily{cmtt}\selectfont setWaypointModuleParams(const CWaypointModuleParams\& f\_params)} - a paraméterek frissítése
+\end{itemize}
+
+\begin{note}
+    Az {\fontfamily{cmtt}\selectfont addLandmark} függvény további paraméterekkel kiegészíthető, ha ezek rendelkezésre állnak a hozzáadás pillanatában. A teljes paraméterlista a következő:
+    \begin{compactitem}
+        \item {\fontfamily{cmtt}\selectfont const common::CPose\& f\_landmark} - a hozzáadni kívánt \emph{landmark}
+        \item {\fontfamily{cmtt}\selectfont common::Metre f\_pathLength} - az útvonal hossza az előző ponttól ebbe a pontba
+        \item {\fontfamily{cmtt}\selectfont vfc::int32\_t f\_directionChangeCount} - az eredeti \emph{landmark-tól} az idáig vezető úton tett irányváltások száma
+    \end{compactitem}
+\end{note}
+
+\subsection{{\fontfamily{cmtt}\selectfont CPathDatabase}}
+
+A {\fontfamily{cmtt}\selectfont CPathDatabase} osztály nem közvetlenül a \emph{Waypoint Module} része, de a teljes útvonaltervező működéséhez elengedhetetlen. Ez egy nagyon projekt-specifikus megvalósítása a fa alapú tárolónak, hiszen nem csak a generált útvonalrészeket kell megtartania, hanem a változó hosszúságú összekötő mozdulatok is itt vannak példányosítva. Ezt a funkcionalitást dinamikus memóriahasználattal el lehet kerülni. Az osztály (nem implementációspecifikus) API függvényei a következők:
+\begin{itemize}
+    \item {\fontfamily{cmtt}\selectfont addPath(const common::CPosture\& f\_startPosture, const common::CPosture\& f\_targetPosture, const MotionPrimitiveResultVector\& f\_primitives)} - egy új útvonal beszúrása a tárolóba a start- és a célpont közötti primitívekkel megadva
+    \item {\fontfamily{cmtt}\selectfont getDirectPathEndingWith(const common::CPosture\& f\_targetPosture)} - egy megadott ponttal végződő útvonalrészlet lekérdezése
+    \item {\fontfamily{cmtt}\selectfont getFullPathFromStartToTarget(const common::CPosture\& f\_startPosture, const common::CPosture\& f\_targetPosture)} - a teljes útvonal lekérdezése a megadott start-, és célpont között
+    \item {\fontfamily{cmtt}\selectfont clear()} - a tároló kiürítése
+\end{itemize}
+
+\subsection{A {\fontfamily{cmtt}\selectfont vfc} keretrendszer és {\fontfamily{cmtt}\selectfont common::*} osztályok}
+
+Az előző pontban említettem, hogy a {\fontfamily{cmtt}\selectfont vfc} keretrendszer és {\fontfamily{cmtt}\selectfont common::*} osztályok szükségesek a \emph{Waypoint Module} működéséhez. Ha ezek nem állnak rendelkezésre, helyettesíteni kell őket más, hasonló funkcionalitású elemekkel.
+
+A {\fontfamily{cmtt}\selectfont vfc} keretrendszer főleg elemi típusokat, tároló objektumokat, matematikai műveleteket és \emph{pointer-ekkel} végzett műveleteket valósít meg. Ennek a komponensnek a helyettesítésére megfelelő lehet az {\fontfamily{cmtt}\selectfont std} standard C++ könyvtár, hiszen ezekben megtalálható minden olyan osztály, amit az implementációban egy {\fontfamily{cmtt}\selectfont vfc}-beli osztály valósít meg. Nem helyettesíti viszont az erősen típusossághoz szükséges mértékegységeket, amik fontos szerepet töltenek be a teljes projekt helyes működésében. Ezeket más könyvtárakkal, vagy saját megvalósítással kell helyettesíteni. Ha teljesen saját implementációval helyettesíti a {\fontfamily{cmtt}\selectfont vfc} keretrendszert, a következő osztályoknak, metódusoknak kell szerepelniük a megfelelő API függvényekkel:
+\begin{itemize}
+    \item Elemi típusok
+    \begin{compactitem}
+        \item 32 bites egész szám
+        \item 32 bites lebegőpontos törtszám
+        \item méter
+        \item radián
+    \end{compactitem}
+
+    \item Matematikai függvények
+    \begin{compactitem}
+        \item $\pi$ értéke 32 bites lebegőpontos törtszámként
+        \item {\fontfamily{cmtt}\selectfont sin(float32\_t f\_value)} - szinusz függvény
+        \item {\fontfamily{cmtt}\selectfont cos(float32\_t f\_value)} - koszinusz függvény
+        \item {\fontfamily{cmtt}\selectfont abs(float32\_t f\_value)} - abszolútérték függvény
+        \item {\fontfamily{cmtt}\selectfont min(float32\_t f\_a, float32\_t f\_b)} - minimum függvény
+        \item {\fontfamily{cmtt}\selectfont max(float32\_t f\_a, float32\_t f\_b)} - maximum függvény
+    \end{compactitem}
+
+    \item Tárolók
+    \begin{compactitem}
+        \item {\fontfamily{cmtt}\selectfont TFixedVector<ValueType, MaxLength>} - fix hosszúságú vektor
+        \item {\fontfamily{cmtt}\selectfont TFixedMap<KeyType, ValueType, MaxLength>} - fix hosszúságú \emph{map}
+    \end{compactitem}
+\end{itemize}
+
+\begin{note}
+    Minden felhasználó által definiált elemi típushoz szükséges a négy alapművelet ($+, -, \times, \div$) és a logikai operátorok ($=, \neq, <, >, \leq, \geq$) definiálása is.
+\end{note}
+
+\subsection{Hibaüzenetek}
+
+A könyvtár osztályai nem sok helyen váltanak ki hibaüzenetet, csak ahol mindenképp szükséges. Az üzenetek és az őket kiváltó függvényei a következők:
+\begin{itemize}
+    \item {\fontfamily{cmtt}\selectfont CMinBinaryHeap::removeMinimum} - "removeMinimum was called on empty heap."
+    \item {\fontfamily{cmtt}\selectfont CMinBinaryHeap::getMinimum} - "getMinimum was called on empty heap."
+    \item {\fontfamily{cmtt}\selectfont CPathDatabase::getDirectPathEndingWith} - "Requested path not found!"
+    \item {\fontfamily{cmtt}\selectfont CPathDatabase::getConnectingMovesEndingWith} - "Requested moves not found!"
+\end{itemize}
+
+Ezen hibák esetén a program csak a tesztkörnyezetben fejezi be a működését, a valódi beágyazott környezetben nem, így máshogy is gondoskodni kell a hibakezelésről. Lehetőség ilyenkor helyettesítő adatot (például {\fontfamily{cmtt}\selectfont nullptr} \emph{pointer-ek} esetében) adni visszatérési értéknek. Ettől sem feltétlenül egyszerűbb a feladat, hiszen a továbbadott értéket is használhatja egy másik objektum. Erre lehet példa a következő kódrészlet:
+\\
+
+\lstset{caption={Többlépcsős hibakezelés}, label=src:altError}
+\begin{lstlisting}[language={C++}]
+VFC_ASSERT2(false == m_openList.isEmpty(), "Getter function called on an empty heap.");
+
+if (m_openList.isEmpty())
+{
+    return nullptr;
+}
+
+return m_openList.getMinimum().getPrimitiveLeadingToNode();
+\end{lstlisting}
+
+Ebben a példában a függvény eredményét is vizsgálni kell majd, mert a {\fontfamily{cmtt}\selectfont nullptr}-nek nem lesznek használható értékei.
