@@ -1,0 +1,166 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{ynt/global//global/global/global}
+    \entry{Nakakawa2021EgovEAReadiness}{inproceedings}{}{}
+      \name{author}{5}{}{%
+        {{hash=6f32039de984cd98d0a5af7c0923a197}{%
+           family={Nakakawa},
+           familyi={N\bibinitperiod},
+           given={Agnes},
+           giveni={A\bibinitperiod}}}%
+        {{hash=a698008f7b1f89c4958066903121c9fa}{%
+           family={Namagembe},
+           familyi={N\bibinitperiod},
+           given={Flavia},
+           giveni={F\bibinitperiod}}}%
+        {{hash=544c9bff0ee1a7cef126bb5ca966aaf8}{%
+           family={Proper},
+           familyi={P\bibinitperiod},
+           given={Henderik\bibnamedelima A.},
+           giveni={H\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=41bdb7c520a45d7ae7336bfd5549a9fc}{%
+           family={Overbeek},
+           familyi={O\bibinitperiod},
+           given={Sietse\bibnamedelima J.},
+           giveni={S\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=63c12490546a484882215999fe3d098e}{%
+           family={Tulinayo},
+           familyi={T\bibinitperiod},
+           given={Fiona\bibnamedelima P.},
+           giveni={F\bibinitperiod\bibinitdelim P\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Kampala, Uganda}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{699a08c904320a8dee320303d465c882}
+      \strng{fullhash}{4006abb6385a30b5fa6d7277e1adabc6}
+      \strng{fullhashraw}{4006abb6385a30b5fa6d7277e1adabc6}
+      \strng{bibnamehash}{699a08c904320a8dee320303d465c882}
+      \strng{authorbibnamehash}{699a08c904320a8dee320303d465c882}
+      \strng{authornamehash}{699a08c904320a8dee320303d465c882}
+      \strng{authorfullhash}{4006abb6385a30b5fa6d7277e1adabc6}
+      \strng{authorfullhashraw}{4006abb6385a30b5fa6d7277e1adabc6}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{This paper presents an integrated maturity model for assessing readiness for architecture-driven e-government implementations in developing economies, synthesizing insights from both enterprise architecture and e-government readiness frameworks.}
+      \field{booktitle}{Proceedings of the 2021 IEEE 25th International Enterprise Distributed Object Computing Workshop (EDOCW)}
+      \field{title}{Assessing Readiness for e-Government Enterprise Architecture in a Developing Economy – Towards an Integrated Maturity Model}
+      \field{year}{2021}
+      \field{pages}{279\bibrangedash 287}
+      \range{pages}{9}
+      \verb{doi}
+      \verb 10.1109/EDOCW52865.2021.00059
+      \endverb
+      \keyw{enterprise architecture,e-government,readiness assessment}
+    \endentry
+    \entry{CNCF2025AnnualSurvey}{report}{}{}
+      \name{author}{2}{}{%
+        {{hash=0e31e38f4ca4082da53bcf84e409f402}{%
+           family={Silverthorne},
+           familyi={S\bibinitperiod},
+           given={Valerie},
+           giveni={V\bibinitperiod}}}%
+        {{hash=8a7352351d7cf009fc77c12c99a7c826}{%
+           family={Hendrick},
+           familyi={H\bibinitperiod},
+           given={Stephen},
+           giveni={S\bibinitperiod}}}%
+      }
+      \list{institution}{2}{%
+        {Cloud Native Computing Foundation}%
+        {The Linux Foundation}%
+      }
+      \strng{namehash}{8329b0db884a3c2928d830b51e92c47b}
+      \strng{fullhash}{8329b0db884a3c2928d830b51e92c47b}
+      \strng{fullhashraw}{8329b0db884a3c2928d830b51e92c47b}
+      \strng{bibnamehash}{8329b0db884a3c2928d830b51e92c47b}
+      \strng{authorbibnamehash}{8329b0db884a3c2928d830b51e92c47b}
+      \strng{authornamehash}{8329b0db884a3c2928d830b51e92c47b}
+      \strng{authorfullhash}{8329b0db884a3c2928d830b51e92c47b}
+      \strng{authorfullhashraw}{8329b0db884a3c2928d830b51e92c47b}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{This report presents the results of the CNCF 2024 Annual Survey, highlighting global trends in cloud-native adoption, Kubernetes use, CI/CD maturity, and the cultural and organizational shifts accompanying widespread containerization.}
+      \field{month}{3}
+      \field{note}{CNCF Annual Survey Report}
+      \field{title}{Cloud Native 2024: Approaching a Decade of Code, Cloud, and Change}
+      \field{type}{techreport}
+      \field{year}{2025}
+      \verb{urlraw}
+      \verb https://www.cncf.io/reports/
+      \endverb
+      \verb{url}
+      \verb https://www.cncf.io/reports/
+      \endverb
+    \endentry
+    \entry{Yanamadala2025CloudNativeEA}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=82b1ec616e155c097b82e103d612238d}{%
+           family={Yanamadala},
+           familyi={Y\bibinitperiod},
+           given={Pavankumar},
+           giveni={P\bibinitperiod}}}%
+      }
+      \list{publisher}{2}{%
+        {World Journal of Advanced Research}%
+        {Reviews}%
+      }
+      \strng{namehash}{82b1ec616e155c097b82e103d612238d}
+      \strng{fullhash}{82b1ec616e155c097b82e103d612238d}
+      \strng{fullhashraw}{82b1ec616e155c097b82e103d612238d}
+      \strng{bibnamehash}{82b1ec616e155c097b82e103d612238d}
+      \strng{authorbibnamehash}{82b1ec616e155c097b82e103d612238d}
+      \strng{authornamehash}{82b1ec616e155c097b82e103d612238d}
+      \strng{authorfullhash}{82b1ec616e155c097b82e103d612238d}
+      \strng{authorfullhashraw}{82b1ec616e155c097b82e103d612238d}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{This article proposes a comprehensive framework for adopting cloud-native enterprise architecture, integrating technical, organizational, and security considerations to guide digital transformation in large-scale enterprises.}
+      \field{journaltitle}{World Journal of Advanced Research and Reviews}
+      \field{number}{1}
+      \field{title}{Demystifying Cloud-Native Enterprise Architecture: A Framework for Digital Transformation in Complex Organizations}
+      \field{volume}{26}
+      \field{year}{2025}
+      \field{pages}{1919\bibrangedash 1928}
+      \range{pages}{10}
+      \verb{doi}
+      \verb 10.30574/wjarr.2025.26.1.1231
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.30574/wjarr.2025.26.1.1231
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.30574/wjarr.2025.26.1.1231
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

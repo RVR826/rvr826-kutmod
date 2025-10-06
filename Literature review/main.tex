@@ -1,0 +1,86 @@
+\documentclass{article}
+\usepackage[
+backend=biber,
+style=numeric,
+sorting=ynt
+]{biblatex}
+
+
+\usepackage{geometry}
+ \geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=20mm,
+ top=20mm,
+ }
+ 
+\usepackage[acronym]{glossaries}
+
+\usepackage{optidef}
+\addbibresource{mybibliography.bib}
+
+
+\makeglossaries
+
+\newglossaryentry{entryOne}
+{
+    name=Glossary Entry,
+    description={Glossary entries are used to provide definitions for words in your document}
+}    
+
+
+\title{
+    Literature Review - Transitioning enterprise architectures into cloud-native enviroments
+}
+\author{Márton Papp}
+\date{Sept 2025}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+The increasing digitization of public and private sector enterprises has intensified the need for robust, adaptive, and interoperable enterprise architectures. Across both developing and developed contexts, the evolution from monolithic systems toward distributed, cloud-native architectures has reshaped how organizations approach digital transformation.  
+
+Three recent studies contribute key perspectives to this ongoing transformation. Nakakawa et al. \cite{Nakakawa2021EgovEAReadiness} present a maturity-based model for assessing readiness for \textit{e-Government Enterprise Architecture (EA)} in developing economies, addressing gaps in aligning e-government and EA readiness assessments. The \textit{Cloud Native Computing Foundation’s (CNCF) 2024 Annual Survey} \cite{CNCF2025AnnualSurvey} provides empirical insight into global adoption trends in cloud-native technologies such as Kubernetes, CI/CD, and containers, highlighting the organizational and cultural challenges in maturing cloud-native practices. Complementing these, Yanamadala \cite{Yanamadala2025CloudNativeEA} develops a theoretical and practical framework for implementing \textit{cloud-native enterprise architecture} to guide large-scale digital transformation, focusing on the technical and organizational dimensions of modernization.
+
+Together, these works offer a holistic view—from readiness assessment in developing economies to the global maturity of cloud-native technologies and the architectural frameworks guiding digital transformation.  
+
+\section{Background}
+
+\subsection{Enterprise Architecture and e-Government Readiness}
+Nakakawa et al. \cite{Nakakawa2021EgovEAReadiness} emphasize that many developing countries have adopted architecture-driven e-government initiatives to improve interoperability and efficiency. However, such efforts often fail due to inadequate assessment of readiness at both the organizational and technological levels. The authors propose the \textit{ARGEA model (Assessing Readiness for Government Enterprise Architecture)}, integrating maturity models from enterprise architecture and e-government readiness. ARGEA’s design science approach enables governments to assess legal, policy, and socio-technical factors across national, sectoral, and institutional levels. This integrated readiness framework is crucial in mitigating the “design-to-reality gap” common in public sector digital projects.
+
+\subsection{Cloud-Native Adoption Trends}
+The CNCF \cite{CNCF2025AnnualSurvey} report provides a panoramic view of how organizations worldwide are operationalizing cloud-native technologies. With 89\% of organizations adopting cloud-native techniques and 91\% using containers in production, the report positions Kubernetes as the dominant orchestration framework, used or evaluated by 93\% of respondents. However, it identifies new barriers shifting from technical (e.g., security, complexity) to cultural and organizational—most notably developer team resistance, CI/CD integration issues, and training gaps. This signals a maturity phase where technology adoption is widespread, but cultural transformation and process automation lag behind.  
+
+The CNCF findings underscore how GitOps, CI/CD pipelines, and multi-cloud strategies are shaping modern enterprise ecosystems. These developments offer an empirical foundation for architectural models like ARGEA and Yanamadala’s framework, showing that readiness is not only technical but also organizational and cultural.
+
+\subsection{Cloud-Native Enterprise Architecture}
+Yanamadala \cite{Yanamadala2025CloudNativeEA} builds on these empirical realities to propose a comprehensive \textit{Cloud-Native Enterprise Architecture (CNEA)} framework. His work details how cloud-native paradigms—containerization, microservices, Infrastructure-as-Code, API-first design, and service mesh—collectively form the foundation of modern digital enterprises. The study identifies key challenges: legacy system integration, regulatory compliance, and the operational complexity of distributed environments. The framework aligns technological elements (e.g., orchestration, observability, and resilience patterns) with organizational adaptations such as DevOps culture and zero-trust security. In doing so, it bridges theoretical architecture concepts with practical transformation strategies for large-scale, complex organizations.
+
+\section{Related Work}
+
+Existing literature on enterprise architecture largely bifurcates into governmental readiness studies and technical transformation frameworks. Nakakawa et al. \cite{Nakakawa2021EgovEAReadiness} draw from earlier work on maturity and capability models (e.g., CMM and IT architecture maturity models) but extend them by integrating dimensions of e-government readiness—organizational, governance, technological, and legal. Their contribution is the contextual adaptation of these models to developing economies, where structural and resource limitations demand incremental capability building.
+
+Yanamadala’s \cite{Yanamadala2025CloudNativeEA} framework aligns with and extends earlier research on cloud-native computing paradigms and container orchestration studies. His synthesis advances the literature by positioning cloud-native principles as a successor to traditional enterprise architecture, emphasizing distributed autonomy, continuous delivery, and resilience as core architectural properties.  
+
+The CNCF Annual Survey \cite{CNCF2025AnnualSurvey} functions as a large-scale empirical validation of many of these conceptual developments. Its data show that cloud-native adoption has transitioned from early experimentation to operational mainstreaming across industries and geographies. Moreover, the report complements theoretical frameworks like Yanamadala’s by quantifying real-world challenges—particularly the cultural readiness gap, echoing the readiness dimensions highlighted by Nakakawa et al.  
+
+Taken together, the three works illustrate a continuum of enterprise architecture evolution:
+\begin{itemize}
+  \item Nakakawa et al. \cite{Nakakawa2021EgovEAReadiness} emphasize readiness and integration in resource-constrained public enterprises.
+  \item CNCF \cite{CNCF2025AnnualSurvey} documents global cloud-native adoption and its socio-technical barriers.
+  \item Yanamadala \cite{Yanamadala2025CloudNativeEA} proposes a holistic cloud-native architectural blueprint for large-scale digital transformation.
+\end{itemize}
+
+This synthesis indicates a growing convergence between public sector maturity models and private sector cloud-native architectures, suggesting a shared trajectory toward scalable, interoperable, and resilient enterprise ecosystems.
+
+ 
+\medskip
+
+\printglossary
+
+\printbibliography
+\end{document}
