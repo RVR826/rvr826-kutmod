@@ -1,13 +1,13 @@
 # Fdb version 4
-["biber main"] 1759758016.39485 "main.bcf" "main.bbl" "main" 1759758047.69545 0
-  "main.bcf" 1759758047 109424 5861f2061f1bfddd614808e759e5d1e9 "pdflatex"
+["biber main"] 1759758016.39485 "main.bcf" "main.bbl" "main" 1759936996.62179 0
+  "main.bcf" 1759936996 109424 5861f2061f1bfddd614808e759e5d1e9 "pdflatex"
   "mybibliography.bib" 1759757619 2426 9af79e06c4a1770f9604b430dec9ef0f ""
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1759758045.72329 "c:/Sajat/ELTE/25-26-1/Kutatásmódszertan/Irodalomkutatás/main.tex" "main.pdf" "main" 1759758047.69624 0
-  "c:/Sajat/ELTE/25-26-1/Kutatásmódszertan/Irodalomkutatás/main.tex" 1759758044 7426 e5b315130806bca72cb20977f6785334 ""
+["pdflatex"] 1759936992.62009 "c:/Sajat/ELTE/25-26-1/Kutatásmódszertan/Irodalomkutatás/main.tex" "main.pdf" "main" 1759936996.62253 0
+  "c:/Sajat/ELTE/25-26-1/Kutatásmódszertan/Irodalomkutatás/main.tex" 1759936988 7440 1f44cdbed87609c2d5caa001a9f60d4a ""
   "c:/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1758731202 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "c:/texlive/2025/texmf-dist/fonts/map/fontname/texfonts.map" 1758732237 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "c:/texlive/2025/texmf-dist/fonts/tfm/jknappen/ec/tcrm1000.tfm" 1758731777 1536 e07581a4bb3136ece9eeb4c3ffab8233 ""
@@ -108,11 +108,11 @@
   "c:/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1758739275 5574153 af86687748baf417d9e7d549313527be ""
   "c:/texlive/2025/texmf-var/web2c/pdftex/pdflatex.fmt" 1758739594 3621637 01cf6107e7cf15a732d307ceb7aaeedc ""
   "c:/texlive/2025/texmf.cnf" 1758739248 713 e69b156964470283e0530f5060668171 ""
-  "main.aux" 1759758047 2408 e4d81a723539b811878d807de11f2159 "pdflatex"
+  "main.aux" 1759936996 2408 e4d81a723539b811878d807de11f2159 "pdflatex"
   "main.bbl" 1759758018 7222 3f81ec38a50a400feff499aaaa985d86 "biber main"
   "main.gls" 0 -1 0 ""
-  "main.run.xml" 1759758047 2309 47597b7bcf0be836819842e490ce765a "pdflatex"
-  "main.tex" 1759758044 7426 e5b315130806bca72cb20977f6785334 ""
+  "main.run.xml" 1759936996 2309 47597b7bcf0be836819842e490ce765a "pdflatex"
+  "main.tex" 1759936988 7440 1f44cdbed87609c2d5caa001a9f60d4a ""
   (generated)
   "main.acn"
   "main.aux"
