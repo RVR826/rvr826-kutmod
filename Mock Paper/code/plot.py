@@ -53,6 +53,18 @@ def res_error(data):
     plt.subplots_adjust(top=0.82)
     plt.show()
 
+def res_error_vs_size(data):
+    mean_times = []
+    for run in data:
+        mean_times.append(np.mean(run))
+
+    plt.plot(np.array(SIZES), mean_times, marker='o')
+    plt.title("Mean Residual Error Increse For Matrix Sizes")
+    plt.xlabel("Matrix Size (n)")
+    plt.ylabel("Mean Error")
+    plt.grid(True)
+    plt.show()
+
 if __name__ == "__main__":
     data = errors()
-    res_error(data)
+    res_error_vs_size(data)

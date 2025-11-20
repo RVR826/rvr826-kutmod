@@ -221,6 +221,11 @@ INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmsy8.tfm
 INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm
 INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam10.tfm
 INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
+INPUT ./res_error_increase.png
+INPUT ./res_error_increase.png
+INPUT ./res_error_increase.png
+INPUT ./res_error_increase.png
+INPUT ./res_error_increase.png
 INPUT c:/texlive/2025/texmf-dist/fonts/vf/adobe/times/ptmr7t.vf
 INPUT main.aux
 INPUT main.run.xml

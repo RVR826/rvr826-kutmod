@@ -1,13 +1,13 @@
 # Fdb version 4
-["biber main"] 1763573163.67059 "main.bcf" "main.bbl" "main" 1763573172.28708 0
-  "main.bcf" 1763573171 108760 747ee28c52f5e389657a7890096a9c77 "pdflatex"
+["biber main"] 1763573163.67059 "main.bcf" "main.bbl" "main" 1763652685.67245 0
+  "main.bcf" 1763652685 108760 747ee28c52f5e389657a7890096a9c77 "pdflatex"
   "main.bib" 1763573147 1017 26cdcb7210c21a820ddd966cc1bc8843 ""
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1763573170.22759 "c:/Sajat/ELTE/25-26-1/Kutatásmódszertan/rvr826-kutmod/Mock Paper/main.tex" "main.pdf" "main" 1763573172.28785 0
-  "c:/Sajat/ELTE/25-26-1/Kutatásmódszertan/rvr826-kutmod/Mock Paper/main.tex" 1763573147 27121 0e2231cbee1ee3f176aaa203a257073e ""
+["pdflatex"] 1763652683.69889 "c:/Sajat/ELTE/25-26-1/Kutatásmódszertan/rvr826-kutmod/Mock Paper/main.tex" "main.pdf" "main" 1763652685.67349 0
+  "c:/Sajat/ELTE/25-26-1/Kutatásmódszertan/rvr826-kutmod/Mock Paper/main.tex" 1763652682 27410 b391a63e006323d1b6a6c8f0e637b41e ""
   "c:/texlive/2025/texmf-dist/fonts/enc/dvips/base/8r.enc" 1762506360 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "c:/texlive/2025/texmf-dist/fonts/map/fontname/texfonts.map" 1762506858 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "c:/texlive/2025/texmf-dist/fonts/tfm/adobe/times/ptmb7t.tfm" 1762510663 2172 fd0c924230362ff848a33632ed45dc23 ""
@@ -111,11 +111,12 @@
   "c:/texlive/2025/texmf-var/web2c/pdftex/pdflatex.fmt" 1762511579 3635475 1e1a61caf924d0feff6457fce08b98ac ""
   "c:/texlive/2025/texmf.cnf" 1762511337 713 e69b156964470283e0530f5060668171 ""
   "distr_vs_msize.png" 1763558161 19449 589087053b93bc788a82a59e6921aece ""
-  "main.aux" 1763573171 2384 c8313aafd7477e8cd2a4fc074d734014 "pdflatex"
+  "main.aux" 1763652685 2594 9d3ac3e40fe397158e62d8ab7aa2e52c "pdflatex"
   "main.bbl" 1763573165 5209 d522b65d08b3785f10ac3f5a0ce18fb5 "biber main"
-  "main.run.xml" 1763573171 2299 81988d3303a58f7ac525483192dfa2a1 "pdflatex"
-  "main.tex" 1763573147 27121 0e2231cbee1ee3f176aaa203a257073e ""
+  "main.run.xml" 1763652685 2299 81988d3303a58f7ac525483192dfa2a1 "pdflatex"
+  "main.tex" 1763652682 27410 b391a63e006323d1b6a6c8f0e637b41e ""
   "res_error.png" 1763558383 70192 7adcb556c228ebb5ebc65b289ee03078 ""
+  "res_error_increase.png" 1763652496 27581 81ba5aaaf1c6f1e71c4ed303b15a4c18 ""
   "rt_vs_msize.png" 1763557863 27946 0a76396f6ad4b3e7e20717e5d3dae428 ""
   (generated)
   "main.aux"

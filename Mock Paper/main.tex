@@ -475,10 +475,17 @@ and OS scheduling, which become increasingly significant at higher computation l
     \label{fig:residuals}
 \end{figure*}
 
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{res_error_increase.png}
+    \caption{Residual error $\|PA - LU\|_F$ increase for matrix sizes.}
+    \label{fig:residual_inc}
+\end{figure}
+
 Figure~\ref{fig:residuals} shows separate histograms of the Frobenius-norm residual error $\|PA - LU\|_F$ for each tested 
 matrix size. The results indicate that the custom $LU$ implementation maintains excellent numerical stability across all scales. 
 Although the magnitude of the residual increases with matrix size, from approximately $10^{-16}$ at $n = 10$ to 
-around $10^{-12}$ at $n = 1000$. These values remain extremely small relative to the size and magnitude of the matrices. 
+around $10^{-12}$ at $n = 1000$. The increase of the residual error can be seen on Figure~\ref{fig:residual_inc}. These values remain extremely small relative to the size and magnitude of the matrices. 
 This confirms that round-off error grows predictably with problem size but does not compromise accuracy. The distributions are 
 tightly concentrated for each matrix dimension, demonstrating consistent behavior across trials and validating the robustness 
 of the partial-pivoting approach for dense random matrices.
