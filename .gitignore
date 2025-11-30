@@ -1,0 +1,80 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Linker files
+*.ilk
+
+# Debugger Files
+*.pdb
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# debug information files
+*.dwo
+
+#.vs, .vscode, .git
+.vs/
+.vscode/
+.git/
+
+# everything else in */out
+GoGraph/out
+
+
+.DS_store
+
+# Compiled files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+
+# Beamer specific
+*.nav
+*.snm
+*.toc
+*.vrb
+
+# Intermediate files
+*.cb
+*.cb2
+
+# Backup files
+*~
+*.bak
+*.swp
+*.tmp

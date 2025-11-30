@@ -1,0 +1,142 @@
+\documentclass[archE1,portrait]{baposter}
+
+%841mm x 1189mm
+\usepackage[font=small,labelfont=bf]{caption} % Required for specifying captions to tables and figures
+\usepackage{amssymb}
+\usepackage{booktabs} % Horizontal rules in tables
+\usepackage{relsize} % Used for making text smaller in some places
+\usepackage[urlcolor  = blue]{hyperref}
+\graphicspath{{figures/}} % Directory in which figures are stored
+
+\definecolor{bordercol}{RGB}{5,2,82} % Border color of content boxes
+\definecolor{headercol1}{RGB}{5,2,82} % Background color for the header in the content boxes (left side)
+\definecolor{headercol2}{RGB}{5,2,82} % Background color for the header in the content boxes (right side)
+\definecolor{headerfontcol}{RGB}{255,255,255} % Text color for the header text in the content boxes
+\definecolor{boxcolor}{RGB}{255,255,255} % Background color for the content in the content boxes
+
+\begin{document}
+
+\background{ % Set the background to an image (background.pdf)
+
+}
+
+\begin{poster}{
+grid=false,
+borderColor=bordercol, % Border color of content boxes
+headerColorOne=headercol1, % Background color for the header in the content boxes (left side)
+headerColorTwo=headercol1, % Background color for the header in the content boxes (right side)
+headerFontColor=headerfontcol, % Text color for the header text in the content boxes
+boxColorOne=boxcolor, % Background color for the content in the content boxes
+headershape=roundedright, % Specify the rounded corner in the content box headers
+headerfont=\Large\sf\bf, % Font modifiers for the text in the content box headers
+textborder=rectangle,
+background=user,
+headerborder=open, % Change to closed for a line under the content box headers
+boxshade=plain
+}
+{}
+%
+%----------------------------------------------------------------------------------------
+%	TITLE AND AUTHOR NAME
+%----------------------------------------------------------------------------------------
+%
+%\vspace{2em}
+{
+%\newline
+Benchmark of an LU decomposition algorithm in Python} % Poster title
+{\vspace{1em} Márton Papp, Ákos Szabó\\ % Author names
+{\smaller ELTE FI}\\
+\vspace{2em}
+} % Author email addresses
+%
+
+%----------------------------------------------------------------------------------------
+%	INTRODUCTION
+%----------------------------------------------------------------------------------------
+
+\headerbox{Introduction}{name=introduction,column=0,row=0, span=3}{
+The LU decomposition ($PA=LU$) is a cornerstone of numerical linear algebra, essential for solving systems of linear equations ($Ax=b$) and inverting matrices.
+
+\begin{itemize}
+    \item \textbf{Importance:} It allows efficient solving for multiple right-hand sides compared to direct inversion. \cite{kaya2005}
+    \item \textbf{Problem:} The algorithm has a cubic time complexity ($O(n^3)$), making performance critical for large datasets.
+    \item \textbf{Goal:} This study benchmarks a custom "pure Python" implementation (Doolittle's method with partial pivoting) to evaluate runtime scaling and numerical stability without low-level optimizations.
+\end{itemize}
+}
+
+%----------------------------------------------------------------------------------------
+%	MATERIALS AND METHODS
+%----------------------------------------------------------------------------------------
+
+\headerbox{Materials and Methods}{name=methods,column=0,below=introduction, span=3}{
+
+\textbf{Implementation Environment}
+\begin{itemize}
+    \item \textbf{Hardware:} Intel Core i5-1135G6 (2.4 GHz, 4 cores), 8GB RAM (Standard Workstation). [cite: 35-37]
+    \item \textbf{Software:} Python 3.14 using NumPy 2.3 for dense matrix operations. [cite: 39, 42]
+    \item \textbf{Algorithm:} Custom implementation of Doolittle's method with partial pivoting. No external optimization libraries were used. [cite: 6, 44]
+\end{itemize}
+
+\textbf{Benchmarking Protocol}
+\begin{itemize}
+    \item \textbf{Dataset:} Randomly generated square matrices ($A \in \mathbb{R}^{n \times n}$). [cite: 61]
+    \item \textbf{Matrix Sizes:} $n \in \{10, 50, 250, 1000\}$ to capture execution scaling. 
+    \item \textbf{Trials:} 100 independent runs per matrix size to measure variability. 
+    \item \textbf{Error Metric:} Numerical stability assessed via Frobenius-norm residual: $||PA - LU||_F$ 
+\end{itemize}
+}
+
+%----------------------------------------------------------------------------------------
+%	RESULTS
+%----------------------------------------------------------------------------------------
+\headerbox{Conclusions}{name=conclusion,column=2,span=1,below=methods}{
+The implementation confirms the expected $O(n^3)$ complexity while maintaining high numerical accuracy ($PA \approx LU$). Although suitable for educational benchmarking, production environments require optimized libraries for large-scale performance.
+}
+
+\headerbox{References}{name=references,column=2, below=conclusion}{
+
+\smaller 
+\renewcommand{\section}[2]{\vskip 0.05em}
+\nocite{*} 
+
+\bibliographystyle{unsrt}
+\bibliography{references} 
+\vspace{1em}
+}
+
+\headerbox{Results}{name=results, column=0 , span=2, below=methods, bottomaligned=references}{ 
+
+\begin{center} 
+    \begin{minipage}[t]{0.4\linewidth}
+        \centering
+        \includegraphics[width=0.95\linewidth]{figures/rt_vs_msize} 
+        \captionof{figure}{Mean runtime vs. Matrix Size. The execution time follows the theoretical cubic growth ($O(n^3)$), exceeding 1s at $n=1000$.}
+    \end{minipage}
+    \hspace{1em}
+    \begin{minipage}[t]{0.4\linewidth}
+        \centering
+        \includegraphics[width=0.95\linewidth]{figures/distr_vs_msize}
+        \captionof{figure}{Runtime variability (100 runs). Significant outliers appear at larger matrix sizes ($n=1000$) due to OS scheduling and caching effects.}
+    \end{minipage}
+\end{center}
+    
+\begin{center} 
+    
+    \begin{minipage}[c]{0.4\linewidth} 
+        \centering
+        \includegraphics[width=\linewidth]{figures/res_error_increase} 
+    \end{minipage}
+    \hspace{1em} 
+    \begin{minipage}[c]{0.4\linewidth} 
+        \captionof{figure}{Residual Error ($||PA-LU||_F$) scaling. Although error grows ($10^{-16} \to 10^{-12}$), it remains negligible.}
+    \end{minipage}
+
+\end{center}
+
+}
+
+\vspace*{20em}
+\hspace{245pt}
+
+\end{poster}
+\end{document}
